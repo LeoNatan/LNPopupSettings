@@ -9,30 +9,31 @@
 #import "SettingKeys.h"
 #import <LNTouchVisualizer/LNTouchVisualizer.h>
 
-NSString* const PopupSettingsBarStyle = @"PopupSettingsBarStyle";
-NSString* const PopupSettingsInteractionStyle = @"PopupSettingsInteractionStyle";
-NSString* const PopupSettingsProgressViewStyle = @"PopupSettingsProgressViewStyle";
-NSString* const PopupSettingsCloseButtonStyle = @"PopupSettingsCloseButtonStyle";
-NSString* const PopupSettingsMarqueeStyle = @"PopupSettingsMarqueeStyle";
-NSString* const PopupSettingsHapticFeedbackStyle = @"PopupSettingsHapticFeedbackStyle";
-NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomizations";
-NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
-NSString* const PopupSettingsHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";
-NSString* const PopupSettingsDisableScrollEdgeAppearance = @"PopupSettingsDisableScrollEdgeAppearance";
-NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
-NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisualizerEnabled";
-NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
-NSString* const PopupSettingsContextMenuEnabled = @"PopupSettingsContextMenuEnabled";
+NSString* const PopupSettingBarStyle = @"PopupSettingsBarStyle";
+NSString* const PopupSettingInteractionStyle = @"PopupSettingsInteractionStyle";
+NSString* const PopupSettingProgressViewStyle = @"PopupSettingsProgressViewStyle";
+NSString* const PopupSettingCloseButtonStyle = @"PopupSettingsCloseButtonStyle";
+NSString* const PopupSettingMarqueeEnabled = @"PopupSettingsMarqueeEnabled";
+NSString* const PopupSettingMarqueeCoordinationEnabled = @"PopupSettingMarqueeCoordinationEnabled";
+NSString* const PopupSettingHapticFeedbackEnabled = @"PopupSettingsHapticFeedbackEnabled";
+NSString* const PopupSettingEnableCustomizations = @"PopupSettingsEnableCustomizations";
+NSString* const PopupSettingExtendBar = @"PopupSettingsExtendBar";
+NSString* const PopupSettingHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";
+NSString* const PopupSettingDisableScrollEdgeAppearance = @"PopupSettingsDisableScrollEdgeAppearance";
+NSString* const PopupSettingVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
+NSString* const PopupSettingTouchVisualizerEnabled = @"PopupSettingsTouchVisualizerEnabled";
+NSString* const PopupSettingCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
+NSString* const PopupSettingContextMenuEnabled = @"PopupSettingsContextMenuEnabled";
 
-NSString* const __LNPopupBarHideContentView = @"__LNPopupBarHideContentView";
-NSString* const __LNPopupBarHideShadow = @"__LNPopupBarHideShadow";
-NSString* const __LNPopupBarEnableLayoutDebug = @"__LNPopupBarEnableLayoutDebug";
-NSString* const __LNForceRTL = @"__LNForceRTL";
-NSString* const __LNDebugScaling = @"__LNDebugScaling";
+NSString* const PopupSettingBarHideContentView = @"__LNPopupBarHideContentView";
+NSString* const PopupSettingBarHideShadow = @"__LNPopupBarHideShadow";
+NSString* const PopupSettingBarEnableLayoutDebug = @"__LNPopupBarEnableLayoutDebug";
+NSString* const PopupSettingForceRTL = @"__LNForceRTL";
+NSString* const PopupSettingDebugScaling = @"__LNDebugScaling";
 
-NSString* const DemoAppDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
-NSString* const DemoAppEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
-NSString* const DemoAppEnableExternalScenes = @"DemoAppEnableExternalScenes";
+NSString* const PopupSettingDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
+NSString* const PopupSettingEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
+NSString* const PopupSettingEnableExternalScenes = @"DemoAppEnableExternalScenes";
 
 @import ObjectiveC;
 
@@ -102,13 +103,8 @@ void fixUIKitSwiftUIShit(void)
 {
 	@autoreleasepool
 	{
-		[NSUserDefaults.settingDefaults registerDefaults:@{
-			PopupSettingsExtendBar: @YES,
-			PopupSettingsHidesBottomBarWhenPushed: @YES
-		}];
-		
-		[NSUserDefaults.settingDefaults addObserver:(id)self forKeyPath:PopupSettingsTouchVisualizerEnabled options:0 context:NULL];
-		[NSUserDefaults.settingDefaults addObserver:(id)self forKeyPath:__LNDebugScaling options:0 context:NULL];
+		[NSUserDefaults.settingDefaults addObserver:(id)self forKeyPath:PopupSettingTouchVisualizerEnabled options:0 context:NULL];
+		[NSUserDefaults.settingDefaults addObserver:(id)self forKeyPath:PopupSettingDebugScaling options:0 context:NULL];
 		
 		[NSNotificationCenter.defaultCenter addObserverForName:UISceneWillConnectNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
 			dispatch_async(dispatch_get_main_queue(), ^{
@@ -128,7 +124,7 @@ void fixUIKitSwiftUIShit(void)
 			continue;
 		}
 		
-		windowScene.touchVisualizerEnabled = [NSUserDefaults.settingDefaults boolForKey:PopupSettingsTouchVisualizerEnabled];
+		windowScene.touchVisualizerEnabled = [NSUserDefaults.settingDefaults boolForKey:PopupSettingTouchVisualizerEnabled];
 		LNTouchConfig* rippleConfig = [LNTouchConfig rippleConfig];
 		rippleConfig.fillColor = UIColor.systemPinkColor;
 		windowScene.touchVisualizerWindow.touchRippleConfig = rippleConfig;
@@ -144,7 +140,7 @@ void fixUIKitSwiftUIShit(void)
 			continue;
 		}
 		
-		CGFloat desiredWidth = [NSUserDefaults.settingDefaults doubleForKey:__LNDebugScaling];
+		CGFloat desiredWidth = [NSUserDefaults.settingDefaults doubleForKey:PopupSettingDebugScaling];
 		if(desiredWidth == 0)
 		{
 			desiredWidth = windowScene.screen.bounds.size.width;

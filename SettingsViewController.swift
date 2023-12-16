@@ -12,6 +12,73 @@ import SwiftUI
 
 import LNPopupController
 
+extension UserDefaults {
+	func object(forKey setting: PopupSetting) -> Any? {
+		return object(forKey: setting.rawValue)
+	}
+	
+	func bool(forKey setting: PopupSetting) -> Bool {
+		return bool(forKey: setting.rawValue)
+	}
+	
+	func set(_ value: Any?, forKey setting: PopupSetting) {
+		set(value, forKey: setting.rawValue)
+	}
+	
+	func removeObject(forKey setting: PopupSetting) {
+		removeObject(forKey: setting.rawValue)
+	}
+}
+
+extension AppStorage {
+	public init(wrappedValue: Value, _ key: PopupSetting, store: UserDefaults? = nil) where Value == Bool {
+		self.init(wrappedValue: wrappedValue, key.rawValue, store: store)
+	}
+	public init(wrappedValue: Value, _ key: PopupSetting, store: UserDefaults? = nil) where Value == Int {
+		self.init(wrappedValue: wrappedValue, key.rawValue, store: store)
+	}
+	public init(wrappedValue: Value, _ key: PopupSetting, store: UserDefaults? = nil) where Value == Double {
+		self.init(wrappedValue: wrappedValue, key.rawValue, store: store)
+	}
+	public init(wrappedValue: Value, _ key: PopupSetting, store: UserDefaults? = nil) where Value == String {
+		self.init(wrappedValue: wrappedValue, key.rawValue, store: store)
+	}
+	public init(wrappedValue: Value, _ key: PopupSetting, store: UserDefaults? = nil) where Value == URL {
+		self.init(wrappedValue: wrappedValue, key.rawValue, store: store)
+	}
+	public init(wrappedValue: Value, _ key: PopupSetting, store: UserDefaults? = nil) where Value == Data {
+		self.init(wrappedValue: wrappedValue, key.rawValue, store: store)
+	}
+	public init(wrappedValue: Value, _ key: PopupSetting, store: UserDefaults? = nil) where Value : RawRepresentable, Value.RawValue == Int {
+		self.init(wrappedValue: wrappedValue, key.rawValue, store: store)
+	}
+	public init(wrappedValue: Value, _ key: PopupSetting, store: UserDefaults? = nil) where Value : RawRepresentable, Value.RawValue == String {
+		self.init(wrappedValue: wrappedValue, key.rawValue, store: store)
+	}
+}
+
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+extension AppStorage where Value : ExpressibleByNilLiteral {
+	public init(_ key: PopupSetting, store: UserDefaults? = nil) where Value == Bool? {
+		self.init(key.rawValue, store: store)
+	}
+	public init(_ key: PopupSetting, store: UserDefaults? = nil) where Value == Int? {
+		self.init(key.rawValue, store: store)
+	}
+	public init(_ key: PopupSetting, store: UserDefaults? = nil) where Value == Double? {
+		self.init(key.rawValue, store: store)
+	}
+	public init(_ key: PopupSetting, store: UserDefaults? = nil) where Value == String? {
+		self.init(key.rawValue, store: store)
+	}
+	public init(_ key: PopupSetting, store: UserDefaults? = nil) where Value == URL? {
+		self.init(key.rawValue, store: store)
+	}
+	public init(_ key: PopupSetting, store: UserDefaults? = nil) where Value == Data? {
+		self.init(key.rawValue, store: store)
+	}
+}
+
 extension UIBlurEffect.Style {
 	static let `default` = UIBlurEffect.Style(rawValue: 0xffff)!
 }
@@ -31,7 +98,7 @@ fileprivate var isLNPopupUIExample: Bool = {
 fileprivate struct LNText: View {
 	let text: Text
 	public init(_ content: String) {
-		@AppStorage(__LNForceRTL) var forceRTL: Bool = false
+		@AppStorage(PopupSetting.forceRTL) var forceRTL: Bool = false
 		@AppStorage("___WTFBBQ") var forceRTLAtOpen: Bool = false
 		
 		if isLNPopupUIExample || forceRTL == false || forceRTL != forceRTLAtOpen {
@@ -87,32 +154,33 @@ fileprivate struct CellPaddedToggle: View {
 }
 
 struct SettingsView : View {
-	@AppStorage(PopupSettingsBarStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
-	@AppStorage(PopupSettingsInteractionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
-	@AppStorage(PopupSettingsCloseButtonStyle, store: .settings) var closeButtonStyle: LNPopupCloseButton.Style = .default
-	@AppStorage(PopupSettingsProgressViewStyle, store: .settings) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
-	@AppStorage(PopupSettingsMarqueeStyle, store: .settings) var marqueeStyle: Int = 0
-	@AppStorage(PopupSettingsHapticFeedbackStyle, store: .settings) var hapticFeedback: Int = 0
-	@AppStorage(PopupSettingsVisualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
+	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
+	@AppStorage(.interactionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
+	@AppStorage(.closeButtonStyle, store: .settings) var closeButtonStyle: LNPopupCloseButton.Style = .default
+	@AppStorage(.progressViewStyle, store: .settings) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
+	@AppStorage(.marqueeEnabled, store: .settings) var marqueeEnabled: Bool = false
+	@AppStorage(.marqueeCoordinationEnabled, store: .settings) var marqueeCoordinationEnabled: Bool = true
+	@AppStorage(.hapticFeedbackEnabled, store: .settings) var hapticFeedback: Bool = true
+	@AppStorage(.visualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
 	
-	@AppStorage(PopupSettingsExtendBar, store: .settings) var extendBar: Bool = true
-	@AppStorage(PopupSettingsHidesBottomBarWhenPushed, store: .settings) var hideBottomBar: Bool = true
-	@AppStorage(PopupSettingsDisableScrollEdgeAppearance, store: .settings) var disableScrollEdgeAppearance: Bool = false
-	@AppStorage(PopupSettingsCustomBarEverywhereEnabled, store: .settings) var customPopupBar: Bool = false
-	@AppStorage(PopupSettingsEnableCustomizations, store: .settings) var enableCustomizations: Bool = false
-	@AppStorage(PopupSettingsContextMenuEnabled, store: .settings) var contextMenu: Bool = false
-	@AppStorage(PopupSettingsTouchVisualizerEnabled, store: .settings) var touchVisualizer: Bool = false
+	@AppStorage(.extendBar, store: .settings) var extendBar: Bool = true
+	@AppStorage(.hidesBottomBarWhenPushed, store: .settings) var hideBottomBar: Bool = true
+	@AppStorage(.disableScrollEdgeAppearance, store: .settings) var disableScrollEdgeAppearance: Bool = false
+	@AppStorage(.customBarEverywhereEnabled, store: .settings) var customPopupBar: Bool = false
+	@AppStorage(.enableCustomizations, store: .settings) var enableCustomizations: Bool = false
+	@AppStorage(.contextMenuEnabled, store: .settings) var contextMenu: Bool = false
+	@AppStorage(.touchVisualizerEnabled, store: .settings) var touchVisualizer: Bool = false
 	
-	@AppStorage(__LNPopupBarHideContentView, store: .settings) var hidePopupBarContentView: Bool = false
-	@AppStorage(__LNPopupBarHideShadow, store: .settings) var hidePopupBarShadow: Bool = false
-	@AppStorage(__LNPopupBarEnableLayoutDebug, store: .settings) var layoutDebug: Bool = false
-	@AppStorage(__LNForceRTL) var forceRTL: Bool = false
+	@AppStorage(.barHideContentView, store: .settings) var hidePopupBarContentView: Bool = false
+	@AppStorage(.barHideShadow, store: .settings) var hidePopupBarShadow: Bool = false
+	@AppStorage(.barEnableLayoutDebug, store: .settings) var layoutDebug: Bool = false
+	@AppStorage(.forceRTL) var forceRTL: Bool = false
 	@AppStorage("___WTFBBQ") var forceRTLAtOpen: Bool = false
-	@AppStorage(__LNDebugScaling, store: .settings) var debugScaling: Double = 0
+	@AppStorage(.debugScaling, store: .settings) var debugScaling: Double = 0
 	
-	@AppStorage(DemoAppDisableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
-	@AppStorage(DemoAppEnableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
-	@AppStorage(DemoAppEnableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
+	@AppStorage(.disableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
+	@AppStorage(.enableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
+	@AppStorage(.enableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
 	
 	@Environment(\.sizeCategory) var sizeCategory
 	
@@ -167,26 +235,6 @@ struct SettingsView : View {
 			}
 			
 			Section {
-				Picker(selection: $marqueeStyle) {
-					CellPaddedText("Default").tag(0)
-					CellPaddedText("Disabled").tag(1)
-					CellPaddedText("Enabled").tag(2)
-				}
-			} header: {
-				LNHeaderFooterView("Marquee")
-			}
-			
-			Section {
-				Picker(selection: $hapticFeedback) {
-					CellPaddedText("Default").tag(0)
-					CellPaddedText("Disabled").tag(1)
-					CellPaddedText("Enabled").tag(2)
-				}
-			} header: {
-				LNHeaderFooterView("Haptic Feedback")
-			}
-			
-			Section {
 				Picker(selection: $blurEffectStyle) {
 					CellPaddedText("Default").tag(UIBlurEffect.Style.default)
 				}
@@ -225,6 +273,21 @@ struct SettingsView : View {
 				}
 			} footer: {
 				LNHeaderFooterView("Traditional blur styles. Available in iOS 8 and above.")
+			}
+			
+			Section {
+				CellPaddedToggle("Title & Subtitle Label Marquee", isOn: $marqueeEnabled)
+				CellPaddedToggle("Coordinate Marquee Labels", isOn: $marqueeCoordinationEnabled)
+			} header: {
+				LNHeaderFooterView("Marquee")
+			}
+			
+			Section {
+				CellPaddedToggle("Popup Interaction Haptic Feedback", isOn: $hapticFeedback)
+			} header: {
+				LNHeaderFooterView("Haptic Feedback")
+			} footer: {
+				LNHeaderFooterView("Enables haptic feedback when the user interacts with the popup.")
 			}
 			
 			Section {
@@ -423,7 +486,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			completion(true)
 			
-			let wantsRTL = UserDefaults.standard.bool(forKey: __LNForceRTL)
+			let wantsRTL = UserDefaults.standard.bool(forKey: .forceRTL)
 			if wantsRTL {
 				setRTL()
 			} else {
@@ -434,33 +497,24 @@ class SettingsViewController: UIHostingController<SettingsView> {
 	
 	class func reset() {
 		let actualReset: () -> () = {
-			UserDefaults.settings.set(true, forKey: PopupSettingsExtendBar)
-			UserDefaults.settings.set(true, forKey: PopupSettingsHidesBottomBarWhenPushed)
-			UserDefaults.settings.removeObject(forKey: PopupSettingsEnableCustomizations)
-			UserDefaults.settings.removeObject(forKey: PopupSettingsDisableScrollEdgeAppearance)
-			UserDefaults.settings.removeObject(forKey: PopupSettingsTouchVisualizerEnabled)
-			UserDefaults.settings.removeObject(forKey: PopupSettingsCustomBarEverywhereEnabled)
-			UserDefaults.settings.removeObject(forKey: PopupSettingsContextMenuEnabled)
-			UserDefaults.settings.removeObject(forKey: PopupSettingsVisualEffectViewBlurEffect)
-			UserDefaults.settings.removeObject(forKey: __LNPopupBarHideContentView)
-			UserDefaults.settings.removeObject(forKey: __LNPopupBarHideShadow)
-			UserDefaults.settings.removeObject(forKey: __LNPopupBarEnableLayoutDebug)
-			UserDefaults.settings.removeObject(forKey: DemoAppDisableDemoSceneColors)
-			UserDefaults.settings.removeObject(forKey: DemoAppEnableFunkyInheritedFont)
-			UserDefaults.settings.removeObject(forKey: DemoAppEnableExternalScenes)
+			UserDefaults.settings.set(true, forKey: .extendBar)
+			UserDefaults.settings.set(true, forKey: .hidesBottomBarWhenPushed)
+			UserDefaults.settings.set(true, forKey: .hapticFeedbackEnabled)
+			UserDefaults.settings.set(true, forKey: .marqueeCoordinationEnabled)
 			
-			UserDefaults.standard.removeObject(forKey: __LNForceRTL)
+			UserDefaults.standard.removeObject(forKey:	.forceRTL)
 			resetRTL()
-			UserDefaults.settings.removeObject(forKey: __LNDebugScaling)
+			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle, PopupSettingsHapticFeedbackStyle] {
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled]
+			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}
 			
-			UserDefaults.settings.setValue(0xffff, forKey: PopupSettingsVisualEffectViewBlurEffect)
+			UserDefaults.settings.set(0xffff, forKey: .visualEffectViewBlurEffect)
 		}
 		
-		if UserDefaults.standard.bool(forKey: __LNForceRTL) {
+		if UserDefaults.standard.bool(forKey: .forceRTL) {
 			alertRestartNeeded { accepted in
 				guard accepted else {
 					return

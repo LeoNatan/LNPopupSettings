@@ -10,30 +10,33 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString* const PopupSettingsBarStyle;
-extern NSString* const PopupSettingsInteractionStyle;
-extern NSString* const PopupSettingsProgressViewStyle;
-extern NSString* const PopupSettingsCloseButtonStyle;
-extern NSString* const PopupSettingsMarqueeStyle;
-extern NSString* const PopupSettingsHapticFeedbackStyle;
-extern NSString* const PopupSettingsEnableCustomizations;
-extern NSString* const PopupSettingsExtendBar;
-extern NSString* const PopupSettingsHidesBottomBarWhenPushed;
-extern NSString* const PopupSettingsDisableScrollEdgeAppearance;
-extern NSString* const PopupSettingsVisualEffectViewBlurEffect;
-extern NSString* const PopupSettingsTouchVisualizerEnabled;
-extern NSString* const PopupSettingsCustomBarEverywhereEnabled;
-extern NSString* const PopupSettingsContextMenuEnabled;
+typedef NSString* PopupSetting _CF_TYPED_EXTENSIBLE_ENUM;
 
-extern NSString* const __LNPopupBarHideContentView;
-extern NSString* const __LNPopupBarHideShadow;
-extern NSString* const __LNPopupBarEnableLayoutDebug;
-extern NSString* const __LNForceRTL;
-extern NSString* const __LNDebugScaling;
+extern PopupSetting const PopupSettingBarStyle;
+extern PopupSetting const PopupSettingInteractionStyle;
+extern PopupSetting const PopupSettingProgressViewStyle;
+extern PopupSetting const PopupSettingCloseButtonStyle;
+extern PopupSetting const PopupSettingMarqueeEnabled;
+extern PopupSetting const PopupSettingMarqueeCoordinationEnabled;
+extern PopupSetting const PopupSettingHapticFeedbackEnabled;
+extern PopupSetting const PopupSettingEnableCustomizations;
+extern PopupSetting const PopupSettingExtendBar;
+extern PopupSetting const PopupSettingHidesBottomBarWhenPushed;
+extern PopupSetting const PopupSettingDisableScrollEdgeAppearance;
+extern PopupSetting const PopupSettingVisualEffectViewBlurEffect;
+extern PopupSetting const PopupSettingTouchVisualizerEnabled;
+extern PopupSetting const PopupSettingCustomBarEverywhereEnabled;
+extern PopupSetting const PopupSettingContextMenuEnabled;
 
-extern NSString* const DemoAppDisableDemoSceneColors;
-extern NSString* const DemoAppEnableFunkyInheritedFont;
-extern NSString* const DemoAppEnableExternalScenes;
+extern PopupSetting const PopupSettingBarHideContentView;
+extern PopupSetting const PopupSettingBarHideShadow;
+extern PopupSetting const PopupSettingBarEnableLayoutDebug;
+extern PopupSetting const PopupSettingForceRTL;
+extern PopupSetting const PopupSettingDebugScaling;
+
+extern PopupSetting const PopupSettingDisableDemoSceneColors;
+extern PopupSetting const PopupSettingEnableFunkyInheritedFont;
+extern PopupSetting const PopupSettingEnableExternalScenes;
 
 @interface NSUserDefaults (LNPopupSettings)
 
