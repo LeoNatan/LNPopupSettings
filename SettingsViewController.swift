@@ -154,6 +154,13 @@ fileprivate struct CellPaddedToggle: View {
 }
 
 struct SettingsView : View {
+	let onDismiss: (() -> ())?
+	@Environment(\.presentationMode) var presentationMode
+	
+	init(onDismiss: (() -> ())? = nil) {
+		self.onDismiss = onDismiss
+	}
+	
 	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
 	@AppStorage(.interactionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
 	@AppStorage(.closeButtonStyle, store: .settings) var closeButtonStyle: LNPopupCloseButton.Style = .default
@@ -434,15 +441,57 @@ struct SettingsView : View {
 					LNHeaderFooterView("Enables scenes for testing with external libraries.")
 				}
 			}
-		}.pickerStyle(.inline).onAppear {
+			
+			Section {
+				
+			} footer: {
+				LNHeaderFooterView("\(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String) Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)")
+			}
+			
+//			Section {
+//				HStack {
+//					CellPaddedText("Version")
+//					Spacer()
+//					CellPaddedText(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String).foregroundColor(.secondary)
+//				}
+//			} header: {
+//				LNHeaderFooterView(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String)
+//			}
+		}
+		.navigationTitle("Settings")
+		.navigationBarTitleDisplayMode(.inline)
+		.toolbar {
+			ToolbarItem(placement: .navigationBarLeading) {
+				Button("Reset") {
+					SettingsViewController.reset()
+				}
+			}
+			ToolbarItem(placement: .confirmationAction) {
+				Button("Done") {
+					if let onDismiss {
+						onDismiss()
+					} else {
+						self.presentationMode.wrappedValue.dismiss()
+					}
+				}
+			}
+		}
+		.pickerStyle(.inline).onAppear {
 			forceRTLAtOpen = forceRTL
 		}.animation(.default, value: marqueeEnabled)
+		
 	}
 }
 
 class SettingsViewController: UIHostingController<SettingsView> {
 	required init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder, rootView: SettingsView())
+		weak var weakSelf: SettingsViewController?
+		
+		super.init(coder: aDecoder, rootView: SettingsView(onDismiss: {
+			weakSelf?.presentingViewController?.dismiss(animated: true)
+		}))
+		
+		weakSelf = self
 	}
 	
 	class func alertRestartNeeded(completion: @escaping (Bool) -> ()) {
@@ -536,25 +585,9 @@ class SettingsViewController: UIHostingController<SettingsView> {
 
 @available(iOS 16.0, *)
 struct SettingsNavView: View {
-	@Environment(\.presentationMode) var presentationMode
-	
 	var body: some View {
 		NavigationStack {
 			SettingsView()
-				.navigationTitle("Settings")
-				.navigationBarTitleDisplayMode(.inline)
-				.toolbar {
-					ToolbarItem(placement: .navigationBarLeading) {
-						Button("Reset") {
-							SettingsViewController.reset()
-						}
-					}
-					ToolbarItem(placement: .confirmationAction) {
-						Button("Done") {
-							self.presentationMode.wrappedValue.dismiss()
-						}
-					}
-				}
 		}.frame(minWidth: 320, minHeight: 480)
 	}
 }
@@ -562,22 +595,44 @@ struct SettingsNavView: View {
 #else
 
 struct NoSettingsView : View {
+	let onDismiss: (() -> ())?
+	@Environment(\.presentationMode) var presentationMode
+	
+	init(onDismiss: (() -> ())? = nil) {
+		self.onDismiss = onDismiss
+	}
+	
 	var body: some View {
 		Text("No Settings")
 			.fontWeight(.semibold)
 			.foregroundStyle(.secondary)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.background(Color(UIColor.systemGroupedBackground))
+			.navigationTitle("Settings")
+			.navigationBarTitleDisplayMode(.inline)
+			.toolbar {
+				ToolbarItem(placement: .confirmationAction) {
+					Button("Done") {
+						if let onDismiss {
+							onDismiss()
+						} else {
+							self.presentationMode.wrappedValue.dismiss()
+						}
+					}
+				}
+			}
 	}
 }
 
 class SettingsViewController: UIHostingController<NoSettingsView> {
 	required init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder, rootView: NoSettingsView())
-	}
-	
-	@IBAction func reset() {
+		weak var weakSelf: SettingsViewController?
 		
+		super.init(coder: aDecoder, rootView: NoSettingsView(onDismiss: {
+			weakSelf?.presentingViewController?.dismiss(animated: true)
+		}))
+		
+		weakSelf = self
 	}
 }
 
