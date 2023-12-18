@@ -277,7 +277,9 @@ struct SettingsView : View {
 			
 			Section {
 				CellPaddedToggle("Title & Subtitle Label Marquee", isOn: $marqueeEnabled)
-				CellPaddedToggle("Coordinate Marquee Labels", isOn: $marqueeCoordinationEnabled)
+				if marqueeEnabled {
+					CellPaddedToggle("Coordinate Marquee Labels", isOn: $marqueeCoordinationEnabled)
+				}
 			} header: {
 				LNHeaderFooterView("Marquee")
 			}
@@ -434,7 +436,7 @@ struct SettingsView : View {
 			}
 		}.pickerStyle(.inline).onAppear {
 			forceRTLAtOpen = forceRTL
-		}
+		}.animation(.default, value: marqueeEnabled)
 	}
 }
 
