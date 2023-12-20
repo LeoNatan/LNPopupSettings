@@ -191,7 +191,6 @@ fileprivate struct SearchAdaptingSection<Content, Header, Footer> {
 	let searchString: String
 	let searchTerms: [String]
 	let isPicker: Bool
-	let isInGroup: Bool
 	
 	let content: Content
 	let header: Header
@@ -202,14 +201,9 @@ fileprivate protocol PickerProtocol {}
 extension Picker : PickerProtocol {}
 
 extension SearchAdaptingSection: View where Content: View, Header: View, Footer: View {
-	init(_ searchString: String, isInGroup: Bool = false, @ViewBuilder content: () -> Content, @ViewBuilder header: () -> Header, @ViewBuilder footer: () -> Footer) {
+	init(_ searchString: String, @ViewBuilder content: (Bool) -> Content, @ViewBuilder header: () -> Header, @ViewBuilder footer: () -> Footer) {
 		self.searchString = searchString
 		var searchTerms = [String]()
-		
-		self.content = LNTextCollector(&searchTerms) {
-			content()
-		}
-		isPicker = self.content is PickerProtocol
 		
 		self.header = LNTextCollector(&searchTerms) {
 			header()
@@ -218,18 +212,24 @@ extension SearchAdaptingSection: View where Content: View, Header: View, Footer:
 			footer()
 		}
 		
+		let matchesHeaderOrFooter = !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
+		
+		self.content = LNTextCollector(&searchTerms) {
+			content(matchesHeaderOrFooter)
+		}
+		isPicker = self.content is PickerProtocol
+		
 		self.searchTerms = searchTerms
-		self.isInGroup = isInGroup
 	}
 	
 	@ViewBuilder var body: some View {
-		if isInGroup == false && searchString.isEmpty == false && (searchTerms.isEmpty || searchTerms.first(where: { $0.localizedCaseInsensitiveContains(searchString) }) == nil) {
+		let _ = print(searchTerms)
+		
+		if searchString.isEmpty == false && (searchTerms.isEmpty || searchTerms.first(where: { $0.localizedCaseInsensitiveContains(searchString) }) == nil) {
 			EmptyView()
 		}
 		else {
-			if content is EmptyView == false && isInGroup && header is EmptyView && !searchString.isEmpty {
-				content
-			} else if content is EmptyView == false && !isInGroup && !isPicker && !searchString.isEmpty {
+			if content is EmptyView == false && !isPicker && !searchString.isEmpty {
 				content
 			} else {
 				Section {
@@ -249,42 +249,44 @@ extension SearchAdaptingSection: View where Content: View, Header: View, Footer:
 }
 
 extension SearchAdaptingSection where Content: View, Header: View, Footer == EmptyView {
-	init(_ searchString: String, isInGroup: Bool = false, @ViewBuilder content: () -> Content, @ViewBuilder header: () -> Header) {
+	init(_ searchString: String, @ViewBuilder content: (Bool) -> Content, @ViewBuilder header: () -> Header) {
 		self.searchString = searchString
 		var searchTerms = [String]()
-		
-		self.content = LNTextCollector(&searchTerms) {
-			content()
-		}
-		isPicker = self.content is PickerProtocol
 		
 		self.header = LNTextCollector(&searchTerms) {
 			header()
 		}
 		self.footer = EmptyView()
 		
+		let matchesHeaderOrFooter = !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
+		
+		self.content = LNTextCollector(&searchTerms) {
+			content(matchesHeaderOrFooter)
+		}
+		isPicker = self.content is PickerProtocol
+		
 		self.searchTerms = searchTerms
-		self.isInGroup = isInGroup
 	}
 }
 
 extension SearchAdaptingSection where Content: View, Header == EmptyView, Footer: View {
-	init(_ searchString: String, isInGroup: Bool = false, @ViewBuilder content: () -> Content, @ViewBuilder footer: () -> Footer) {
+	init(_ searchString: String, @ViewBuilder content: (Bool) -> Content, @ViewBuilder footer: () -> Footer) {
 		self.searchString = searchString
 		var searchTerms = [String]()
-		
-		self.content = LNTextCollector(&searchTerms) {
-			content()
-		}
-		isPicker = self.content is PickerProtocol
 		
 		self.header = EmptyView()
 		self.footer = LNTextCollector(&searchTerms) {
 			footer()
 		}
 		
+		let matchesHeaderOrFooter = !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
+		
+		self.content = LNTextCollector(&searchTerms) {
+			content(matchesHeaderOrFooter)
+		}
+		isPicker = self.content is PickerProtocol
+		
 		self.searchTerms = searchTerms
-		self.isInGroup = isInGroup
 	}
 }
 
@@ -335,7 +337,7 @@ fileprivate struct SearchAdaptingPickerGroup<Header: View, SelectionValue: Hasha
 			EmptyView()
 		} else {
 			if !searchString.isEmpty {
-				SearchAdaptingSection("") {
+				SearchAdaptingSection("") { _ in
 					Picker(selection: selection) {
 						ForEach(Array(content.enumerated()), id: \.offset) {
 							AnyView(erasing: $1.content)
@@ -348,7 +350,7 @@ fileprivate struct SearchAdaptingPickerGroup<Header: View, SelectionValue: Hasha
 			else {
 				ForEach(content.indices, id: \.self) { idx in
 					let current = content[idx]
-					SearchAdaptingSection("") {
+					SearchAdaptingSection("") { _ in
 						Picker(selection: selection) {
 							AnyView(erasing: current.content)
 						}
@@ -440,7 +442,7 @@ struct SettingsForm : View {
 		}
 		else {
 			SearchAdaptingForm(searchText) {
-				SearchAdaptingSection(searchText) {
+				SearchAdaptingSection(searchText) { _ in
 					Picker(selection: $barStyle) {
 						CellPaddedText("Default").tag(LNPopupBar.Style.default)
 						CellPaddedText("Compact").tag(LNPopupBar.Style.compact)
@@ -451,7 +453,7 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Bar Style")
 				}
 				
-				SearchAdaptingSection(searchText) {
+				SearchAdaptingSection(searchText) { _ in
 					Picker(selection: $interactionStyle) {
 						CellPaddedText("Default").tag(UIViewController.__PopupInteractionStyle.default)
 						CellPaddedText("Drag").tag(UIViewController.__PopupInteractionStyle.drag)
@@ -463,7 +465,7 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Interaction Style")
 				}
 				
-				SearchAdaptingSection(searchText) {
+				SearchAdaptingSection(searchText) { _ in
 					Picker(selection: $closeButtonStyle) {
 						CellPaddedText("Default").tag(LNPopupCloseButton.Style.default)
 						CellPaddedText("Round").tag(LNPopupCloseButton.Style.round)
@@ -475,7 +477,7 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Close Button Style")
 				}
 				
-				SearchAdaptingSection(searchText) {
+				SearchAdaptingSection(searchText) { _ in
 					Picker(selection: $progressViewStyle) {
 						CellPaddedText("Default").tag(LNPopupBar.ProgressViewStyle.default)
 						CellPaddedText("Top").tag(LNPopupBar.ProgressViewStyle.top)
@@ -518,25 +520,25 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Background Blur Style")
 				}
 				
-				SearchAdaptingSection(searchText) {
-					CellPaddedToggle("Title & Subtitle Label Marquee", isOn: $marqueeEnabled, searchString: searchText)
+				SearchAdaptingSection(searchText) { matchedInParent in
+					CellPaddedToggle("Title & Subtitle Label Marquee", isOn: $marqueeEnabled, searchString: matchedInParent ? "" : searchText)
 					if marqueeEnabled {
-						CellPaddedToggle("Coordinate Marquee Labels", isOn: $marqueeCoordinationEnabled, searchString: searchText)
+						CellPaddedToggle("Coordinate Marquee Labels", isOn: $marqueeCoordinationEnabled, searchString: matchedInParent ? "" : searchText)
 					}
 				} header: {
 					LNHeaderFooterView("Marquee")
 				}
 				
-				SearchAdaptingSection(searchText) {
-					CellPaddedToggle("Popup Interaction Haptic Feedback", isOn: $hapticFeedback, searchString: searchText)
+				SearchAdaptingSection(searchText) { matchedInParent in
+					CellPaddedToggle("Popup Interaction Haptic Feedback", isOn: $hapticFeedback, searchString: matchedInParent ? "" : searchText)
 				} header: {
 					LNHeaderFooterView("Haptic Feedback")
 				} footer: {
 					LNHeaderFooterView("Enables haptic feedback when the user interacts with the popup.")
 				}
 				
-				SearchAdaptingSection(searchText) {
-					CellPaddedToggle("Extend Bar Under Safe Area", isOn: $extendBar, searchString: searchText)
+				SearchAdaptingSection(searchText) { matchedInParent in
+					CellPaddedToggle("Extend Bar Under Safe Area", isOn: $extendBar, searchString: matchedInParent ? "" : searchText)
 				} header: {
 					LNHeaderFooterView("Settings")
 				} footer: {
@@ -548,56 +550,56 @@ struct SettingsForm : View {
 				}
 				
 				if isLNPopupUIExample == false {
-					SearchAdaptingSection(searchText) {
-						CellPaddedToggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar, searchString: searchText)
+					SearchAdaptingSection(searchText) { matchedInParent in
+						CellPaddedToggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar, searchString: matchedInParent ? "" : searchText)
 					} footer: {
 						LNHeaderFooterView("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
 					}
 					
-					SearchAdaptingSection(searchText) {
-						CellPaddedToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance, searchString: searchText)
+					SearchAdaptingSection(searchText) { matchedInParent in
+						CellPaddedToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance, searchString: matchedInParent ? "" : searchText)
 					} footer: {
 						LNHeaderFooterView("Disables the scroll edge appearance for system bars in standard demo scenes.")
 					}
 				}
 				
-				SearchAdaptingSection(searchText) {
-					CellPaddedToggle("Context Menu Interactions", isOn: $contextMenu, searchString: searchText)
+				SearchAdaptingSection(searchText) { matchedInParent in
+					CellPaddedToggle("Context Menu Interactions", isOn: $contextMenu, searchString: matchedInParent ? "" : searchText)
 				} footer: {
 					LNHeaderFooterView("Enables popup bar context menu interaction in standard demo scenes.")
 				}
 				
-				SearchAdaptingSection(searchText) {
-					CellPaddedToggle("Customizations", isOn: $enableCustomizations, searchString: searchText)
+				SearchAdaptingSection(searchText) { matchedInParent in
+					CellPaddedToggle("Customizations", isOn: $enableCustomizations, searchString: matchedInParent ? "" : searchText)
 				} footer: {
 					LNHeaderFooterView("Enables popup bar customizations in standard demo scenes.")
 				}
 				
-				SearchAdaptingSection(searchText) {
-					CellPaddedToggle("Custom Popup Bar", isOn: $customPopupBar, searchString: searchText)
+				SearchAdaptingSection(searchText) { matchedInParent in
+					CellPaddedToggle("Custom Popup Bar", isOn: $customPopupBar, searchString: matchedInParent ? "" : searchText)
 				} footer: {
 					LNHeaderFooterView("Enables a custom popup bar in standard demo scenes.")
 				}
 				
-				SearchAdaptingSection(searchText) {
-					CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors, searchString: searchText)
+				SearchAdaptingSection(searchText) { matchedInParent in
+					CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors, searchString: matchedInParent ? "" : searchText)
 				} footer: {
 					LNHeaderFooterView("Disables random background colors in the demo scenes.")
 				}
 				
 				if isLNPopupUIExample {
-					SearchAdaptingSection(searchText) {
-						CellPaddedToggle("Enable Funky Inherited Font", isOn: $enableFunkyInheritedFont, searchString: searchText)
+					SearchAdaptingSection(searchText) { matchedInParent in
+						CellPaddedToggle("Use Funky Inherited Font", isOn: $enableFunkyInheritedFont, searchString: matchedInParent ? "" : searchText)
 					} footer: {
 						LNHeaderFooterView("Enables an environment font that is inherited by the popup bar.")
 					}
 				}
 				
-				SearchAdaptingSection(searchText) {
-					CellPaddedToggle("Layout Debug", isOn: $layoutDebug, searchString: searchText)
-					CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView, searchString: searchText)
-					CellPaddedToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow, searchString: searchText)
-					CellPaddedToggle("Use Right-to-Left Pseudolanguage With Right-to-Left Strings", isOn: $forceRTL, searchString: searchText).onChange(of: forceRTL) { _ in
+				SearchAdaptingSection(searchText) { matchedInParent in
+					CellPaddedToggle("Layout Debug", isOn: $layoutDebug, searchString: matchedInParent ? "" : searchText)
+					CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView, searchString: matchedInParent ? "" : searchText)
+					CellPaddedToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow, searchString: matchedInParent ? "" : searchText)
+					CellPaddedToggle("Use Right-to-Left Pseudolanguage With Right-to-Left Strings", isOn: $forceRTL, searchString: matchedInParent ? "" : searchText).onChange(of: forceRTL) { _ in
 						guard forceRTL != forceRTLAtOpen else {
 							return
 						}
@@ -662,8 +664,8 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Popup Bar Debug")
 				}
 				
-				SearchAdaptingSection(searchText) {
-					CellPaddedToggle("Touch Visualizer", isOn: $touchVisualizer, searchString: searchText)
+				SearchAdaptingSection(searchText) { matchedInParent in
+					CellPaddedToggle("Touch Visualizer", isOn: $touchVisualizer, searchString: matchedInParent ? "" : searchText)
 				} header: {
 					LNHeaderFooterView("Demonstration")
 				} footer: {
@@ -671,8 +673,8 @@ struct SettingsForm : View {
 				}
 				
 				if isLNPopupUIExample {
-					SearchAdaptingSection(searchText) {
-						CellPaddedToggle("Enable", isOn: $enableExternalScenes, searchString: searchText)
+					SearchAdaptingSection(searchText) { matchedInParent in
+						CellPaddedToggle("CompactSlider", isOn: $enableExternalScenes, searchString: matchedInParent ? "" : searchText)
 					} header: {
 						LNHeaderFooterView("External Libraries")
 					} footer: {
@@ -680,7 +682,7 @@ struct SettingsForm : View {
 					}
 				}
 				
-				SearchAdaptingSection(searchText) {
+				SearchAdaptingSection(searchText) { matchedInParent in
 					
 				} footer: {
 					LNHeaderFooterView("\(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String) Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)")
