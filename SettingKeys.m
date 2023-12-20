@@ -56,7 +56,8 @@ NSString* const PopupSettingEnableExternalScenes = @"DemoAppEnableExternalScenes
 __attribute__((constructor))
 void fixUIKitSwiftUIShit(void)
 {
-	[NSUserDefaults.settingDefaults setBool:YES forKey:@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists"];
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists"];
+	[NSUserDefaults.standardUserDefaults registerDefaults:@{@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists": @YES}];
 	
 	{
 		Class cls = UICollectionViewCell.class;
