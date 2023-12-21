@@ -105,9 +105,8 @@ fileprivate struct LNText: View {
 		NotificationCenter.default.post(name: .textVisited, object: content)
 		
 		@AppStorage(PopupSetting.forceRTL) var forceRTL: Bool = false
-		@AppStorage("___WTFBBQ") var forceRTLAtOpen: Bool = false
 		
-		if isLNPopupUIExample || forceRTL == false || forceRTL != forceRTLAtOpen {
+		if isLNPopupUIExample || forceRTL == false {
 			text = Text(LocalizedStringKey(content))
 		} else {
 			text = Text(content.applyingTransform(.latinToHebrew, reverse: false)!)
@@ -201,7 +200,7 @@ fileprivate protocol PickerProtocol {}
 extension Picker : PickerProtocol {}
 
 extension SearchAdaptingSection: View where Content: View, Header: View, Footer: View {
-	init(_ searchString: String, @ViewBuilder content: (Bool) -> Content, @ViewBuilder header: () -> Header, @ViewBuilder footer: () -> Footer) {
+	init(_ searchString: String, includeHeaderAndFooter include: Bool = false, @ViewBuilder content: (String) -> Content, @ViewBuilder header: () -> Header, @ViewBuilder footer: () -> Footer) {
 		self.searchString = searchString
 		var searchTerms = [String]()
 		
@@ -212,10 +211,10 @@ extension SearchAdaptingSection: View where Content: View, Header: View, Footer:
 			footer()
 		}
 		
-		let matchesHeaderOrFooter = !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
+		let matchesHeaderOrFooter = include && !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
 		
 		self.content = LNTextCollector(&searchTerms) {
-			content(matchesHeaderOrFooter)
+			content(matchesHeaderOrFooter ? "" : searchString)
 		}
 		isPicker = self.content is PickerProtocol
 		
@@ -223,8 +222,6 @@ extension SearchAdaptingSection: View where Content: View, Header: View, Footer:
 	}
 	
 	@ViewBuilder var body: some View {
-		let _ = print(searchTerms)
-		
 		if searchString.isEmpty == false && (searchTerms.isEmpty || searchTerms.first(where: { $0.localizedCaseInsensitiveContains(searchString) }) == nil) {
 			EmptyView()
 		}
@@ -249,7 +246,7 @@ extension SearchAdaptingSection: View where Content: View, Header: View, Footer:
 }
 
 extension SearchAdaptingSection where Content: View, Header: View, Footer == EmptyView {
-	init(_ searchString: String, @ViewBuilder content: (Bool) -> Content, @ViewBuilder header: () -> Header) {
+	init(_ searchString: String, includeHeaderAndFooter include: Bool = false, @ViewBuilder content: (String) -> Content, @ViewBuilder header: () -> Header) {
 		self.searchString = searchString
 		var searchTerms = [String]()
 		
@@ -258,10 +255,10 @@ extension SearchAdaptingSection where Content: View, Header: View, Footer == Emp
 		}
 		self.footer = EmptyView()
 		
-		let matchesHeaderOrFooter = !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
+		let matchesHeaderOrFooter = include && !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
 		
 		self.content = LNTextCollector(&searchTerms) {
-			content(matchesHeaderOrFooter)
+			content(matchesHeaderOrFooter ? "" : searchString)
 		}
 		isPicker = self.content is PickerProtocol
 		
@@ -270,7 +267,7 @@ extension SearchAdaptingSection where Content: View, Header: View, Footer == Emp
 }
 
 extension SearchAdaptingSection where Content: View, Header == EmptyView, Footer: View {
-	init(_ searchString: String, @ViewBuilder content: (Bool) -> Content, @ViewBuilder footer: () -> Footer) {
+	init(_ searchString: String, includeHeaderAndFooter include: Bool = false, @ViewBuilder content: (String) -> Content, @ViewBuilder footer: () -> Footer) {
 		self.searchString = searchString
 		var searchTerms = [String]()
 		
@@ -279,10 +276,10 @@ extension SearchAdaptingSection where Content: View, Header == EmptyView, Footer
 			footer()
 		}
 		
-		let matchesHeaderOrFooter = !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
+		let matchesHeaderOrFooter = include && !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
 		
 		self.content = LNTextCollector(&searchTerms) {
-			content(matchesHeaderOrFooter)
+			content(matchesHeaderOrFooter ? "" : searchString)
 		}
 		isPicker = self.content is PickerProtocol
 		
@@ -413,7 +410,6 @@ struct SettingsForm : View {
 	@AppStorage(.barHideShadow, store: .settings) var hidePopupBarShadow: Bool = false
 	@AppStorage(.barEnableLayoutDebug, store: .settings) var layoutDebug: Bool = false
 	@AppStorage(.forceRTL) var forceRTL: Bool = false
-	@AppStorage("___WTFBBQ") var forceRTLAtOpen: Bool = false
 	@AppStorage(.debugScaling, store: .settings) var debugScaling: Double = 0
 	
 	@AppStorage(.disableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
@@ -520,25 +516,25 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Background Blur Style")
 				}
 				
-				SearchAdaptingSection(searchText) { matchedInParent in
-					CellPaddedToggle("Title & Subtitle Label Marquee", isOn: $marqueeEnabled, searchString: matchedInParent ? "" : searchText)
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Title & Subtitle Label Marquee", isOn: $marqueeEnabled, searchString: searchText)
 					if marqueeEnabled {
-						CellPaddedToggle("Coordinate Marquee Labels", isOn: $marqueeCoordinationEnabled, searchString: matchedInParent ? "" : searchText)
+						CellPaddedToggle("Coordinate Marquee Labels", isOn: $marqueeCoordinationEnabled, searchString: searchText)
 					}
 				} header: {
 					LNHeaderFooterView("Marquee")
 				}
 				
-				SearchAdaptingSection(searchText) { matchedInParent in
-					CellPaddedToggle("Popup Interaction Haptic Feedback", isOn: $hapticFeedback, searchString: matchedInParent ? "" : searchText)
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Popup Interaction Haptic Feedback", isOn: $hapticFeedback, searchString: searchText)
 				} header: {
 					LNHeaderFooterView("Haptic Feedback")
 				} footer: {
 					LNHeaderFooterView("Enables haptic feedback when the user interacts with the popup.")
 				}
 				
-				SearchAdaptingSection(searchText) { matchedInParent in
-					CellPaddedToggle("Extend Bar Under Safe Area", isOn: $extendBar, searchString: matchedInParent ? "" : searchText)
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Extend Bar Under Safe Area", isOn: $extendBar, searchString: searchText)
 				} header: {
 					LNHeaderFooterView("Settings")
 				} footer: {
@@ -550,66 +546,62 @@ struct SettingsForm : View {
 				}
 				
 				if isLNPopupUIExample == false {
-					SearchAdaptingSection(searchText) { matchedInParent in
-						CellPaddedToggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar, searchString: matchedInParent ? "" : searchText)
+					SearchAdaptingSection(searchText) { searchText in
+						CellPaddedToggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar, searchString: searchText)
 					} footer: {
 						LNHeaderFooterView("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
 					}
 					
-					SearchAdaptingSection(searchText) { matchedInParent in
-						CellPaddedToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance, searchString: matchedInParent ? "" : searchText)
+					SearchAdaptingSection(searchText) { searchText in
+						CellPaddedToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance, searchString: searchText)
 					} footer: {
 						LNHeaderFooterView("Disables the scroll edge appearance for system bars in standard demo scenes.")
 					}
 				}
 				
-				SearchAdaptingSection(searchText) { matchedInParent in
-					CellPaddedToggle("Context Menu Interactions", isOn: $contextMenu, searchString: matchedInParent ? "" : searchText)
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Context Menu Interactions", isOn: $contextMenu, searchString: searchText)
 				} footer: {
 					LNHeaderFooterView("Enables popup bar context menu interaction in standard demo scenes.")
 				}
 				
-				SearchAdaptingSection(searchText) { matchedInParent in
-					CellPaddedToggle("Customizations", isOn: $enableCustomizations, searchString: matchedInParent ? "" : searchText)
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Customizations", isOn: $enableCustomizations, searchString: searchText)
 				} footer: {
 					LNHeaderFooterView("Enables popup bar customizations in standard demo scenes.")
 				}
 				
-				SearchAdaptingSection(searchText) { matchedInParent in
-					CellPaddedToggle("Custom Popup Bar", isOn: $customPopupBar, searchString: matchedInParent ? "" : searchText)
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Custom Popup Bar", isOn: $customPopupBar, searchString: searchText)
 				} footer: {
 					LNHeaderFooterView("Enables a custom popup bar in standard demo scenes.")
 				}
 				
-				SearchAdaptingSection(searchText) { matchedInParent in
-					CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors, searchString: matchedInParent ? "" : searchText)
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors, searchString: searchText)
 				} footer: {
 					LNHeaderFooterView("Disables random background colors in the demo scenes.")
 				}
 				
 				if isLNPopupUIExample {
-					SearchAdaptingSection(searchText) { matchedInParent in
-						CellPaddedToggle("Use Funky Inherited Font", isOn: $enableFunkyInheritedFont, searchString: matchedInParent ? "" : searchText)
+					SearchAdaptingSection(searchText) { searchText in
+						CellPaddedToggle("Use Funky Inherited Font", isOn: $enableFunkyInheritedFont, searchString: searchText)
 					} footer: {
 						LNHeaderFooterView("Enables an environment font that is inherited by the popup bar.")
 					}
 				}
 				
-				SearchAdaptingSection(searchText) { matchedInParent in
-					CellPaddedToggle("Layout Debug", isOn: $layoutDebug, searchString: matchedInParent ? "" : searchText)
-					CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView, searchString: matchedInParent ? "" : searchText)
-					CellPaddedToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow, searchString: matchedInParent ? "" : searchText)
-					CellPaddedToggle("Use Right-to-Left Pseudolanguage With Right-to-Left Strings", isOn: $forceRTL, searchString: matchedInParent ? "" : searchText).onChange(of: forceRTL) { _ in
-						guard forceRTL != forceRTLAtOpen else {
-							return
-						}
-						
-						SettingsViewController.toggleRTL() { accepted in
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Layout Debug", isOn: $layoutDebug, searchString: searchText)
+					CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView, searchString: searchText)
+					CellPaddedToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow, searchString: searchText)
+					CellPaddedToggle("Use Right-to-Left Pseudolanguage With Right-to-Left Strings", isOn: $forceRTL, searchString: searchText).onTapGesture {
+						SettingsViewController.toggleRTL { accepted in
 							if accepted {
 								return
 							}
 							
-							forceRTL = forceRTLAtOpen
+							forceRTL.toggle()
 						}
 					}
 					
@@ -664,8 +656,8 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Popup Bar Debug")
 				}
 				
-				SearchAdaptingSection(searchText) { matchedInParent in
-					CellPaddedToggle("Touch Visualizer", isOn: $touchVisualizer, searchString: matchedInParent ? "" : searchText)
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Touch Visualizer", isOn: $touchVisualizer, searchString: searchText)
 				} header: {
 					LNHeaderFooterView("Demonstration")
 				} footer: {
@@ -673,8 +665,8 @@ struct SettingsForm : View {
 				}
 				
 				if isLNPopupUIExample {
-					SearchAdaptingSection(searchText) { matchedInParent in
-						CellPaddedToggle("CompactSlider", isOn: $enableExternalScenes, searchString: matchedInParent ? "" : searchText)
+					SearchAdaptingSection(searchText, includeHeaderAndFooter: true) { searchText in
+						CellPaddedToggle("CompactSlider", isOn: $enableExternalScenes, searchString: searchText)
 					} header: {
 						LNHeaderFooterView("External Libraries")
 					} footer: {
@@ -682,7 +674,7 @@ struct SettingsForm : View {
 					}
 				}
 				
-				SearchAdaptingSection(searchText) { matchedInParent in
+				SearchAdaptingSection(searchText) { _ in
 					
 				} footer: {
 					LNHeaderFooterView("\(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String) Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)")
@@ -711,7 +703,6 @@ struct SettingsView : View {
 	@State private var searchText = ""
 	
 	@AppStorage(.forceRTL) var forceRTL: Bool = false
-	@AppStorage("___WTFBBQ") var forceRTLAtOpen: Bool = false
 	@AppStorage(.marqueeEnabled, store: .settings) var marqueeEnabled: Bool = false
 	
 	let onDismiss: (() -> ())?
@@ -745,11 +736,8 @@ struct SettingsView : View {
 			}
 		}
 		.pickerStyle(.inline)
-		.onAppear {
-			forceRTLAtOpen = forceRTL
-		}
 		.animation(.default, value: marqueeEnabled)
-		.searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
+		.searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: NSLocalizedString("Search", comment: ""))
 	}
 }
 
@@ -764,16 +752,28 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		weakSelf = self
 	}
 	
-	class func alertRestartNeeded(completion: @escaping (Bool) -> ()) {
-		let alertController = UIAlertController(title: NSLocalizedString("Restart Required", comment: ""), message: NSLocalizedString("Continuing will require exiting and restarting the app.", comment: ""), preferredStyle: .alert)
+	enum ResetAlertChoice {
+		case cancelled
+		case resetWithoutRestart
+		case reset
+	}
+	
+	class func alertRestartNeeded(allowSafeReset: Bool, completion: @escaping (ResetAlertChoice) -> ()) {
+		let alertController = UIAlertController(title: NSLocalizedString("Restart Required", comment: ""), message: NSLocalizedString("Changing some settings requires exiting the app and restarting it.", comment: ""), preferredStyle: .alert)
+		alertController.view.tintColor = .systemBlue
 		if #available(iOS 16.0, *) {
 			alertController.severity = .critical
 		}
 		alertController.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: { _ in
-			completion(false)
+			completion(.cancelled)
 		}))
+		if allowSafeReset {
+			alertController.addAction(UIAlertAction(title: NSLocalizedString("Reset Without Exiting", comment: ""), style: .default, handler: { _ in
+				completion(.resetWithoutRestart)
+			}))
+		}
 		alertController.addAction(UIAlertAction(title: NSLocalizedString("Exit", comment: ""), style: .destructive, handler: { _ in
-			completion(true)
+			completion(.reset)
 			UserDefaults.settings.synchronize()
 			exit(0)
 		}))
@@ -799,8 +799,8 @@ class SettingsViewController: UIHostingController<SettingsView> {
 	}
 	
 	class func toggleRTL(completion: @escaping (Bool) -> ()) {
-		alertRestartNeeded { accepted in
-			guard accepted else {
+		alertRestartNeeded(allowSafeReset: false) { response in
+			guard response == .reset else {
 				completion(false)
 				return
 			}
@@ -817,14 +817,17 @@ class SettingsViewController: UIHostingController<SettingsView> {
 	}
 	
 	class func reset() {
-		let actualReset: () -> () = {
+		let actualReset: (Bool) -> () = { includeRTL in
 			UserDefaults.settings.set(true, forKey: .extendBar)
 			UserDefaults.settings.set(true, forKey: .hidesBottomBarWhenPushed)
 			UserDefaults.settings.set(true, forKey: .hapticFeedbackEnabled)
 			UserDefaults.settings.set(true, forKey: .marqueeCoordinationEnabled)
 			
-			UserDefaults.standard.removeObject(forKey:	.forceRTL)
-			resetRTL()
+			if includeRTL {
+				UserDefaults.standard.removeObject(forKey:	.forceRTL)
+				resetRTL()
+			}
+			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
 			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled]
@@ -836,15 +839,15 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		}
 		
 		if UserDefaults.standard.bool(forKey: .forceRTL) {
-			alertRestartNeeded { accepted in
-				guard accepted else {
+			alertRestartNeeded(allowSafeReset: true) { response in
+				guard response != .cancelled else {
 					return
 				}
 				
-				actualReset()
+				actualReset(response == .reset)
 			}
 		} else {
-			actualReset()
+			actualReset(false)
 		}
 	}
 	
