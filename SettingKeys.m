@@ -144,7 +144,7 @@ void fixUIKitSwiftUIShit(void)
 		CGFloat desiredWidth = [NSUserDefaults.settingDefaults doubleForKey:PopupSettingDebugScaling];
 		if(desiredWidth == 0)
 		{
-			desiredWidth = windowScene.screen.bounds.size.width;
+			desiredWidth = windowScene.screen.fixedCoordinateSpace.bounds.size.width;
 		}
 		   
 		CGFloat scale = windowScene.screen.fixedCoordinateSpace.bounds.size.width / desiredWidth;

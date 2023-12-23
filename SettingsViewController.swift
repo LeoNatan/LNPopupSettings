@@ -99,6 +99,12 @@ fileprivate var isLNPopupUIExample: Bool = {
 	return ProcessInfo.processInfo.processName == "LNPopupUIExample"
 }()
 
+fileprivate extension String {
+	func matches(_ another: String) -> Bool {
+		return range(of: another, options: [.caseInsensitive]) != nil
+	}
+}
+
 fileprivate struct LNText: View {
 	let text: Text
 	public init(_ content: String) {
@@ -169,7 +175,7 @@ fileprivate struct CellPaddedToggle: View {
 	let isOn: Binding<Bool>
 	
 	init(_ title: String, isOn: Binding<Bool>, searchString: String) {
-		isHidden = searchString.isEmpty == false && title.localizedCaseInsensitiveContains(searchString) == false
+		isHidden = searchString.isEmpty == false && title.matches(searchString) == false
 		self.title = LNText(title)
 		self.isOn = isOn
 	}
@@ -211,7 +217,7 @@ extension SearchAdaptingSection: View where Content: View, Header: View, Footer:
 			footer()
 		}
 		
-		let matchesHeaderOrFooter = include && !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
+		let matchesHeaderOrFooter = include && !searchString.isEmpty && searchTerms.firstIndex(where: { $0.matches(searchString) }) != nil
 		
 		self.content = LNTextCollector(&searchTerms) {
 			content(matchesHeaderOrFooter ? "" : searchString)
@@ -222,7 +228,7 @@ extension SearchAdaptingSection: View where Content: View, Header: View, Footer:
 	}
 	
 	@ViewBuilder var body: some View {
-		if searchString.isEmpty == false && (searchTerms.isEmpty || searchTerms.first(where: { $0.localizedCaseInsensitiveContains(searchString) }) == nil) {
+		if searchString.isEmpty == false && (searchTerms.isEmpty || searchTerms.first(where: { $0.matches(searchString) }) == nil) {
 			EmptyView()
 		}
 		else {
@@ -255,7 +261,7 @@ extension SearchAdaptingSection where Content: View, Header: View, Footer == Emp
 		}
 		self.footer = EmptyView()
 		
-		let matchesHeaderOrFooter = include && !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
+		let matchesHeaderOrFooter = include && !searchString.isEmpty && searchTerms.firstIndex(where: { $0.matches(searchString) }) != nil
 		
 		self.content = LNTextCollector(&searchTerms) {
 			content(matchesHeaderOrFooter ? "" : searchString)
@@ -276,7 +282,7 @@ extension SearchAdaptingSection where Content: View, Header == EmptyView, Footer
 			footer()
 		}
 		
-		let matchesHeaderOrFooter = include && !searchString.isEmpty && searchTerms.firstIndex(where: { $0.localizedCaseInsensitiveContains(searchString) }) != nil
+		let matchesHeaderOrFooter = include && !searchString.isEmpty && searchTerms.firstIndex(where: { $0.matches(searchString) }) != nil
 		
 		self.content = LNTextCollector(&searchTerms) {
 			content(matchesHeaderOrFooter ? "" : searchString)
@@ -330,7 +336,7 @@ fileprivate struct SearchAdaptingPickerGroup<Header: View, SelectionValue: Hasha
 	}
 	
 	var body: some View {
-		if !searchString.isEmpty && searchTerms.first(where: { $0.localizedCaseInsensitiveContains(searchString) }) == nil {
+		if !searchString.isEmpty && searchTerms.first(where: { $0.matches(searchString) }) == nil {
 			EmptyView()
 		} else {
 			if !searchString.isEmpty {
@@ -363,28 +369,6 @@ fileprivate struct SearchAdaptingPickerGroup<Header: View, SelectionValue: Hasha
 				}
 			}
 		}
-	}
-}
-
-fileprivate struct SearchAdaptingForm<Content: View> : View {
-	let searchString: String
-	let content: Content
-	
-	init(_ searchString: String, @ViewBuilder content: () -> Content) {
-		self.searchString = searchString
-		self.content = content()
-	}
-	
-	@ViewBuilder var body: some View {
-//		if searchString.isEmpty {
-			Form {
-				content
-			}
-//		} else {
-//			List {
-//				content
-//			}.listStyle(.grouped)
-//		}
 	}
 }
 
@@ -428,16 +412,15 @@ struct SettingsForm : View {
 	
 	@ViewBuilder var body: some View {
 		if isDefault == false && (isSearching == false || searchText.isEmpty) {
-			if isSearching == false {
-				EmptyView()
-			} else {
-				Color.black.opacity(0.12).ignoresSafeArea().onTapGesture {
+			Color.black.opacity(isSearching ? 0.12 : 0.0).ignoresSafeArea()
+				.transition(.opacity)
+				.animation(.default, value: isSearching)
+				.onTapGesture {
 					dismissSearch()
 				}
-			}
 		}
 		else {
-			SearchAdaptingForm(searchText) {
+			Form {
 				SearchAdaptingSection(searchText) { _ in
 					Picker(selection: $barStyle) {
 						CellPaddedText("Default").tag(LNPopupBar.Style.default)
@@ -605,7 +588,7 @@ struct SettingsForm : View {
 						}
 					}
 					
-					if isDefault || "Scaling".localizedCaseInsensitiveContains(searchText) {
+					if isDefault || "Scaling".matches(searchText) {
 						NavigationLink {
 							Form {
 								Section {
@@ -680,15 +663,15 @@ struct SettingsForm : View {
 					LNHeaderFooterView("\(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String) Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)")
 				}
 				
-//				SearchAdaptingSection(searchText) {
-//					HStack {
-//						CellPaddedText("Version")
-//						Spacer()
-//						CellPaddedText(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String).foregroundColor(.secondary)
-//					}
-//				} header: {
-//					LNHeaderFooterView(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String)
-//				}
+				//				SearchAdaptingSection(searchText) {
+				//					HStack {
+				//						CellPaddedText("Version")
+				//						Spacer()
+				//						CellPaddedText(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String).foregroundColor(.secondary)
+				//					}
+				//				} header: {
+				//					LNHeaderFooterView(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String)
+				//				}
 			}
 			.background {
 				if isDefault == false {
@@ -742,6 +725,18 @@ struct SettingsView : View {
 }
 
 class SettingsViewController: UIHostingController<SettingsView> {
+	required init() {
+		weak var weakSelf: SettingsViewController?
+		
+		super.init(rootView: SettingsView(onDismiss: {
+			weakSelf?.presentingViewController?.dismiss(animated: true)
+		}))
+		
+		weakSelf = self
+		
+		self.preferredContentSize = CGSize(width: 375, height: 600)
+	}
+	
 	required init?(coder aDecoder: NSCoder) {
 		weak var weakSelf: SettingsViewController?
 		
@@ -750,6 +745,8 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		}))
 		
 		weakSelf = self
+		
+		self.preferredContentSize = CGSize(width: 375, height: 600)
 	}
 	
 	enum ResetAlertChoice {
@@ -861,7 +858,7 @@ struct SettingsNavView: View {
 	var body: some View {
 		NavigationStack {
 			SettingsView()
-		}.frame(minWidth: 320, minHeight: 480)
+		}
 	}
 }
 
