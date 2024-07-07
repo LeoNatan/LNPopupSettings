@@ -400,6 +400,8 @@ struct SettingsForm : View {
 	@AppStorage(.enableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
 	@AppStorage(.enableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
 	
+	@AppStorage(.enableCustomLabels, store: .settings) var enableCustomLabels: Bool = false
+	
 	@Environment(\.isSearching) private var isSearching
 	@Environment(\.dismissSearch) private var dismissSearch
 	let searchText: String
@@ -552,6 +554,14 @@ struct SettingsForm : View {
 					CellPaddedToggle("Customizations", isOn: $enableCustomizations, searchString: searchText)
 				} footer: {
 					LNHeaderFooterView("Enables popup bar customizations in standard demo scenes.")
+				}
+				
+				if isLNPopupUIExample {
+					SearchAdaptingSection(searchText) { searchText in
+						CellPaddedToggle("Custom Labels", isOn: $enableCustomLabels, searchString: searchText)
+					} footer: {
+						LNHeaderFooterView("Enables the use of custom labels in standard demo scenes.")
+					}
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
@@ -827,7 +837,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}

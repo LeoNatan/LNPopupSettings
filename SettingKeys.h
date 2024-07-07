@@ -38,6 +38,8 @@ extern PopupSetting const PopupSettingDisableDemoSceneColors;
 extern PopupSetting const PopupSettingEnableFunkyInheritedFont;
 extern PopupSetting const PopupSettingEnableExternalScenes;
 
+extern PopupSetting const PopupSettingEnableCustomLabels;
+
 @interface NSUserDefaults (LNPopupSettings)
 
 @property (class, nonatomic, strong, readonly) NSUserDefaults* settingDefaults NS_SWIFT_NAME(settings);

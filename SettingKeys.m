@@ -35,6 +35,8 @@ NSString* const PopupSettingDisableDemoSceneColors = @"__LNPopupBarDisableDemoSc
 NSString* const PopupSettingEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
 NSString* const PopupSettingEnableExternalScenes = @"DemoAppEnableExternalScenes";
 
+NSString* const PopupSettingEnableCustomLabels = @"DemoAppEnableCustomLabels";
+
 @import ObjectiveC;
 
 @implementation NSUserDefaults (LNPopupSettings)
