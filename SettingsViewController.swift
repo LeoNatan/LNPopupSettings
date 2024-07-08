@@ -2,7 +2,7 @@
 //  SettingsViewController.swift
 //  LNPopupControllerExample
 //
-//  Created by Leo Natan on 02/10/2023.
+//  Created by Léo Natan on 02/10/2023.
 //  Copyright © 2023 Leo Natan. All rights reserved.
 //
 
