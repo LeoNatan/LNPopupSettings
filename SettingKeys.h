@@ -46,4 +46,10 @@ extern PopupSetting const PopupSettingEnableCustomLabels;
 
 @end
 
+@interface NSNotificationCenter (LNPopupSettings)
+
+- (id<NSObject>)addMainQueueObserverForName:(nullable NSNotificationName)name object:(nullable id)obj usingBlock:(void (^)(NSNotification * _Nonnull))block NS_SWIFT_UI_ACTOR;
+
+@end
+
 NS_ASSUME_NONNULL_END

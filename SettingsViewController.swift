@@ -95,7 +95,7 @@ fileprivate extension Picker where Label == EmptyView {
 	}
 }
 
-fileprivate var isLNPopupUIExample: Bool = {
+@MainActor fileprivate var isLNPopupUIExample: Bool = {
 	return ProcessInfo.processInfo.processName == "LNPopupUIExample"
 }()
 
@@ -105,6 +105,7 @@ fileprivate extension String {
 	}
 }
 
+@MainActor
 fileprivate struct LNText: View {
 	let text: Text
 	public init(_ content: String) {
@@ -124,9 +125,11 @@ fileprivate struct LNText: View {
 	}
 }
 
+@MainActor
 fileprivate func LNTextCollector<Content>(_ container: inout [String], content: () -> Content) -> Content {
 	var results = [String]()
-	let observer = NotificationCenter.default.addObserver(forName: .textVisited, object: nil, queue: nil) { note in
+	
+	let observer = NotificationCenter.default.addMainQueueObserver(forName: .textVisited, object: nil) { note in
 		results.append(note.object as! String)
 	}
 	
@@ -138,6 +141,7 @@ fileprivate func LNTextCollector<Content>(_ container: inout [String], content: 
 	return rv
 }
 
+@MainActor
 fileprivate struct LNHeaderFooterView: View {
 	let content: LNText
 	public init(_ content: String) {
@@ -157,6 +161,7 @@ fileprivate func requiredPadding() -> CGFloat? {
 	return 4.167
 }
 
+@MainActor
 fileprivate struct CellPaddedText: View {
 	let content: LNText
 	public init(_ content: String) {
@@ -169,6 +174,7 @@ fileprivate struct CellPaddedText: View {
 	}
 }
 
+@MainActor
 fileprivate struct CellPaddedToggle: View {
 	let isHidden: Bool
 	let title: LNText
@@ -192,6 +198,7 @@ fileprivate struct CellPaddedToggle: View {
 	}
 }
 
+@MainActor
 fileprivate struct SearchAdaptingSection<Content, Header, Footer> {
 	let searchString: String
 	let searchTerms: [String]
@@ -310,6 +317,7 @@ fileprivate struct PickerGroupContentBuilder {
 	}
 }
 
+@MainActor
 fileprivate struct SearchAdaptingPickerGroup<Header: View, SelectionValue: Hashable>: View {
 	let searchString: String
 	let searchTerms: [String]

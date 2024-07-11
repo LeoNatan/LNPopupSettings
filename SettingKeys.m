@@ -187,3 +187,12 @@ void fixUIKitSwiftUIShit(void)
 }
 
 @end
+
+@implementation NSNotificationCenter (LNPopupSettings)
+
+- (id<NSObject>)addMainQueueObserverForName:(nullable NSNotificationName)name object:(nullable id)obj usingBlock:(void (^)(NSNotification * _Nonnull))block
+{
+	return [self addObserverForName:name object:obj queue:NSOperationQueue.mainQueue usingBlock:block];
+}
+
+@end
