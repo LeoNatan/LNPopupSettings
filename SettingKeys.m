@@ -1,9 +1,9 @@
 //
 //  SettingKeys.m
-//  LNPopupControllerExample
+//  LNPopupSettings
 //
-//  Created by Léo Natan on 18/03/2017.
-//  Copyright © 2017 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2023-12-15.
+//  Copyright © 2023-2024 Léo Natan. All rights reserved.
 //
 
 #import "SettingKeys.h"

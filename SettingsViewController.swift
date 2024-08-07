@@ -1,9 +1,9 @@
 //
 //  SettingsViewController.swift
-//  LNPopupControllerExample
+//  LNPopupSettings
 //
-//  Created by Léo Natan on 02/10/2023.
-//  Copyright © 2023 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2023-12-15.
+//  Copyright © 2023-2024 Léo Natan. All rights reserved.
 //
 
 import SwiftUI
