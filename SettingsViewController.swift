@@ -18,11 +18,15 @@ extension Notification.Name {
 
 extension UserDefaults {
 	func object(forKey setting: PopupSetting) -> Any? {
-		return object(forKey: setting.rawValue)
+		object(forKey: setting.rawValue)
+	}
+	
+	func integer(forKey setting: PopupSetting) -> Int {
+		integer(forKey: setting.rawValue)
 	}
 	
 	func bool(forKey setting: PopupSetting) -> Bool {
-		return bool(forKey: setting.rawValue)
+		bool(forKey: setting.rawValue)
 	}
 	
 	func set(_ value: Any?, forKey setting: PopupSetting) {
@@ -409,6 +413,7 @@ struct SettingsForm : View {
 	@AppStorage(.enableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
 	
 	@AppStorage(.enableCustomLabels, store: .settings) var enableCustomLabels: Bool = false
+	@AppStorage(.useScrollingPopupContent, store: .settings) var useScrollingPopupContent: Int = 0
 	
 	@Environment(\.isSearching) private var isSearching
 	@Environment(\.dismissSearch) private var dismissSearch
@@ -578,10 +583,33 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Enables a custom popup bar in standard demo scenes.")
 				}
 				
+				if !isLNPopupUIExample {
+					SearchAdaptingSection(searchText) { searchText in
+						Picker(selection: $useScrollingPopupContent) {
+							CellPaddedText("None").tag(0)
+							CellPaddedText("Vertical").tag(1)
+							CellPaddedText("Horizontal").tag(2)
+						} label: {
+							CellPaddedText("Use Scrolling Content")
+						}
+						.pickerStyle(.menu)
+						.tint(.secondary)
+					} footer: {
+						switch useScrollingPopupContent {
+						case 1:
+							LNHeaderFooterView("Uses vertical scrolling popup content in standard demo scenes.")
+						case 2:
+							LNHeaderFooterView("Uses horizontal scrolling popup content in standard demo scenes.")
+						default:
+							LNHeaderFooterView("Uses standard popup content in standard demo scenes.")
+						}
+					}
+				}
+				
 				SearchAdaptingSection(searchText) { searchText in
 					CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors, searchString: searchText)
 				} footer: {
-					LNHeaderFooterView("Disables random background colors in the demo scenes.")
+					LNHeaderFooterView("Disables random background colors in standard demo scenes.")
 				}
 				
 				if isLNPopupUIExample {
@@ -680,16 +708,6 @@ struct SettingsForm : View {
 				} footer: {
 					LNHeaderFooterView("\(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String) Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)")
 				}
-				
-				//				SearchAdaptingSection(searchText) {
-				//					HStack {
-				//						CellPaddedText("Version")
-				//						Spacer()
-				//						CellPaddedText(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String).foregroundColor(.secondary)
-				//					}
-				//				} header: {
-				//					LNHeaderFooterView(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String)
-				//				}
 			}
 			.background {
 				if isDefault == false {
@@ -845,7 +863,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}

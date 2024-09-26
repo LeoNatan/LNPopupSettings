@@ -8,6 +8,7 @@
 
 #import "SettingKeys.h"
 #import <LNTouchVisualizer/LNTouchVisualizer.h>
+@import ObjectiveC;
 
 NSString* const PopupSettingBarStyle = @"PopupSettingsBarStyle";
 NSString* const PopupSettingInteractionStyle = @"PopupSettingsInteractionStyle";
@@ -37,7 +38,7 @@ NSString* const PopupSettingEnableExternalScenes = @"DemoAppEnableExternalScenes
 
 NSString* const PopupSettingEnableCustomLabels = @"DemoAppEnableCustomLabels";
 
-@import ObjectiveC;
+NSString* const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrollingPopupContent";
 
 @implementation NSUserDefaults (LNPopupSettings)
 

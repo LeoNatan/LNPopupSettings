@@ -40,6 +40,8 @@ extern PopupSetting const PopupSettingEnableExternalScenes;
 
 extern PopupSetting const PopupSettingEnableCustomLabels;
 
+extern PopupSetting const PopupSettingUseScrollingPopupContent;
+
 @interface NSUserDefaults (LNPopupSettings)
 
 @property (class, nonatomic, strong, readonly) NSUserDefaults* settingDefaults NS_SWIFT_NAME(settings);
