@@ -587,10 +587,18 @@ struct SettingsForm : View {
 					SearchAdaptingSection(searchText) { searchText in
 						Picker(selection: $useScrollingPopupContent) {
 							CellPaddedText("None").tag(0)
-							CellPaddedText("Vertical").tag(1)
-							CellPaddedText("Horizontal").tag(2)
+							
+							CellPaddedText("Vertical").tag(10)
+							CellPaddedText("Horizontal").tag(11)
+							
+							CellPaddedText("Paged Vertical").tag(20)
+							CellPaddedText("Paged Horizontal").tag(21)
+							CellPaddedText("Paged Vertical & Paged Horizontal").tag(22)
+							CellPaddedText("Paged Horizontal & Paged Vertical").tag(23)
+							
+							CellPaddedText("Map View").tag(100)
 						} label: {
-							CellPaddedText("Use Scrolling Content")
+							CellPaddedText("Scrolling Popup Content")
 						}
 						.pickerStyle(.menu)
 						.tint(.secondary)
