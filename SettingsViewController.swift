@@ -183,21 +183,28 @@ fileprivate struct CellPaddedToggle: View {
 	let isHidden: Bool
 	let title: LNText
 	let isOn: Binding<Bool>
+	let onTapGesture: (() -> Void)?
 	
-	init(_ title: String, isOn: Binding<Bool>, searchString: String) {
+	init(_ title: String, isOn: Binding<Bool>, searchString: String, onTapGesture: (() -> Void)? = nil) {
 		isHidden = searchString.isEmpty == false && title.matches(searchString) == false
 		self.title = LNText(title)
 		self.isOn = isOn
+		self.onTapGesture = onTapGesture
 	}
 	
 	var body: some View {
 		if isHidden {
 			EmptyView()
 		} else {
-			Toggle(isOn: isOn, label: {
-				title
-					.padding([.top, .bottom], requiredPadding())
-			})
+			ZStack {
+				Toggle(isOn: isOn, label: {
+					title
+						.padding([.top, .bottom], requiredPadding())
+				}).allowsHitTesting(onTapGesture == nil)
+				if let onTapGesture {
+					Color.red.opacity(0.001).onTapGesture(perform: onTapGesture)
+				}
+			}
 		}
 	}
 }
@@ -395,6 +402,7 @@ struct SettingsForm : View {
 	@AppStorage(.visualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
 	
 	@AppStorage(.extendBar, store: .settings) var extendBar: Bool = true
+	@AppStorage(.limitFloatingWidth, store: .settings) var limitFloatingWidth: Bool = true
 	@AppStorage(.hidesBottomBarWhenPushed, store: .settings) var hideBottomBar: Bool = true
 	@AppStorage(.disableScrollEdgeAppearance, store: .settings) var disableScrollEdgeAppearance: Bool = false
 	@AppStorage(.customBarEverywhereEnabled, store: .settings) var customPopupBar: Bool = false
@@ -543,6 +551,12 @@ struct SettingsForm : View {
 					}
 				}
 				
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Limit Width of Floating Bar", isOn: $limitFloatingWidth, searchString: searchText)
+				} footer: {
+					LNHeaderFooterView("Limits the width of a floating popup bar to a system-determined value in standard demo scenes.")
+				}
+				
 				if isLNPopupUIExample == false {
 					SearchAdaptingSection(searchText) { searchText in
 						CellPaddedToggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar, searchString: searchText)
@@ -632,9 +646,9 @@ struct SettingsForm : View {
 					CellPaddedToggle("Layout Debug", isOn: $layoutDebug, searchString: searchText)
 					CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView, searchString: searchText)
 					CellPaddedToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow, searchString: searchText)
-					CellPaddedToggle("Use Right-to-Left Pseudolanguage With Right-to-Left Strings", isOn: $forceRTL, searchString: searchText).onTapGesture {
+					CellPaddedToggle("Use Right-to-Left Pseudolanguage With Right-to-Left Strings", isOn: $forceRTL, searchString: searchText) {
 						SettingsViewController.toggleRTL { accepted in
-							if accepted {
+							guard accepted else {
 								return
 							}
 							
@@ -831,12 +845,14 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		UserDefaults.standard.set(true, forKey: "AppleTextDirection")
 		UserDefaults.standard.set(true, forKey: "NSForceRightToLeftWritingDirection")
 		UserDefaults.standard.set(true, forKey: "NSForceRightToLeftLocalizedStrings")
+		UserDefaults.standard.synchronize()
 	}
 	
 	class func resetRTL() {
 		UserDefaults.standard.removeObject(forKey: "AppleTextDirection")
 		UserDefaults.standard.removeObject(forKey: "NSForceRightToLeftWritingDirection")
 		UserDefaults.standard.removeObject(forKey: "NSForceRightToLeftLocalizedStrings")
+		UserDefaults.standard.synchronize()
 	}
 	
 	class func toggleRTL(completion: @escaping (Bool) -> ()) {
@@ -871,7 +887,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}

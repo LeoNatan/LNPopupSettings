@@ -27,6 +27,7 @@ extern PopupSetting const PopupSettingVisualEffectViewBlurEffect;
 extern PopupSetting const PopupSettingTouchVisualizerEnabled;
 extern PopupSetting const PopupSettingCustomBarEverywhereEnabled;
 extern PopupSetting const PopupSettingContextMenuEnabled;
+extern PopupSetting const PopupSettingLimitFloatingWidth;
 
 extern PopupSetting const PopupSettingBarHideContentView;
 extern PopupSetting const PopupSettingBarHideShadow;

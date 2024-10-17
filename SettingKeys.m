@@ -10,35 +10,36 @@
 #import <LNTouchVisualizer/LNTouchVisualizer.h>
 @import ObjectiveC;
 
-NSString* const PopupSettingBarStyle = @"PopupSettingsBarStyle";
-NSString* const PopupSettingInteractionStyle = @"PopupSettingsInteractionStyle";
-NSString* const PopupSettingProgressViewStyle = @"PopupSettingsProgressViewStyle";
-NSString* const PopupSettingCloseButtonStyle = @"PopupSettingsCloseButtonStyle";
-NSString* const PopupSettingMarqueeEnabled = @"PopupSettingsMarqueeEnabled";
-NSString* const PopupSettingMarqueeCoordinationEnabled = @"PopupSettingMarqueeCoordinationEnabled";
-NSString* const PopupSettingHapticFeedbackEnabled = @"PopupSettingsHapticFeedbackEnabled";
-NSString* const PopupSettingEnableCustomizations = @"PopupSettingsEnableCustomizations";
-NSString* const PopupSettingExtendBar = @"PopupSettingsExtendBar";
-NSString* const PopupSettingHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";
-NSString* const PopupSettingDisableScrollEdgeAppearance = @"PopupSettingsDisableScrollEdgeAppearance";
-NSString* const PopupSettingVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
-NSString* const PopupSettingTouchVisualizerEnabled = @"PopupSettingsTouchVisualizerEnabled";
-NSString* const PopupSettingCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
-NSString* const PopupSettingContextMenuEnabled = @"PopupSettingsContextMenuEnabled";
+PopupSetting const PopupSettingBarStyle = @"PopupSettingsBarStyle";
+PopupSetting const PopupSettingInteractionStyle = @"PopupSettingsInteractionStyle";
+PopupSetting const PopupSettingProgressViewStyle = @"PopupSettingsProgressViewStyle";
+PopupSetting const PopupSettingCloseButtonStyle = @"PopupSettingsCloseButtonStyle";
+PopupSetting const PopupSettingMarqueeEnabled = @"PopupSettingsMarqueeEnabled";
+PopupSetting const PopupSettingMarqueeCoordinationEnabled = @"PopupSettingMarqueeCoordinationEnabled";
+PopupSetting const PopupSettingHapticFeedbackEnabled = @"PopupSettingsHapticFeedbackEnabled";
+PopupSetting const PopupSettingEnableCustomizations = @"PopupSettingsEnableCustomizations";
+PopupSetting const PopupSettingExtendBar = @"PopupSettingsExtendBar";
+PopupSetting const PopupSettingHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";
+PopupSetting const PopupSettingDisableScrollEdgeAppearance = @"PopupSettingsDisableScrollEdgeAppearance";
+PopupSetting const PopupSettingVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
+PopupSetting const PopupSettingTouchVisualizerEnabled = @"PopupSettingsTouchVisualizerEnabled";
+PopupSetting const PopupSettingCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
+PopupSetting const PopupSettingContextMenuEnabled = @"PopupSettingsContextMenuEnabled";
+PopupSetting const PopupSettingLimitFloatingWidth = @"PopupSettingLimitFloatingWidth";
 
-NSString* const PopupSettingBarHideContentView = @"__LNPopupBarHideContentView";
-NSString* const PopupSettingBarHideShadow = @"__LNPopupBarHideShadow";
-NSString* const PopupSettingBarEnableLayoutDebug = @"__LNPopupBarEnableLayoutDebug";
-NSString* const PopupSettingForceRTL = @"__LNForceRTL";
-NSString* const PopupSettingDebugScaling = @"__LNDebugScaling";
+PopupSetting const PopupSettingBarHideContentView = @"__LNPopupBarHideContentView";
+PopupSetting const PopupSettingBarHideShadow = @"__LNPopupBarHideShadow";
+PopupSetting const PopupSettingBarEnableLayoutDebug = @"__LNPopupBarEnableLayoutDebug";
+PopupSetting const PopupSettingForceRTL = @"__LNForceRTL";
+PopupSetting const PopupSettingDebugScaling = @"__LNDebugScaling";
 
-NSString* const PopupSettingDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
-NSString* const PopupSettingEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
-NSString* const PopupSettingEnableExternalScenes = @"DemoAppEnableExternalScenes";
+PopupSetting const PopupSettingDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
+PopupSetting const PopupSettingEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
+PopupSetting const PopupSettingEnableExternalScenes = @"DemoAppEnableExternalScenes";
 
-NSString* const PopupSettingEnableCustomLabels = @"DemoAppEnableCustomLabels";
+PopupSetting const PopupSettingEnableCustomLabels = @"DemoAppEnableCustomLabels";
 
-NSString* const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrollingPopupContent";
+PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrollingPopupContent";
 
 @implementation NSUserDefaults (LNPopupSettings)
 
@@ -61,6 +62,8 @@ void fixUIKitSwiftUIShit(void)
 {
 	[NSUserDefaults.standardUserDefaults removeObjectForKey:@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists"];
 	[NSUserDefaults.standardUserDefaults registerDefaults:@{@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists": @YES}];
+	
+	[NSUserDefaults.standardUserDefaults registerDefaults:@{PopupSettingLimitFloatingWidth: @YES}];
 	
 	{
 		Class cls = UICollectionViewCell.class;
