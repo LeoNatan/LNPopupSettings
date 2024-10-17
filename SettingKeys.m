@@ -50,6 +50,8 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		rv = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.LeoNatan.LNPopupSettings"];
+		
+		[rv registerDefaults:@{PopupSettingLimitFloatingWidth: @YES, PopupSettingHidesBottomBarWhenPushed: @YES, PopupSettingExtendBar: @YES, PopupSettingHapticFeedbackEnabled: @YES, PopupSettingMarqueeCoordinationEnabled: @YES}];
 	});
 	
 	return rv;
@@ -62,8 +64,6 @@ void fixUIKitSwiftUIShit(void)
 {
 	[NSUserDefaults.standardUserDefaults removeObjectForKey:@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists"];
 	[NSUserDefaults.standardUserDefaults registerDefaults:@{@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists": @YES}];
-	
-	[NSUserDefaults.standardUserDefaults registerDefaults:@{PopupSettingLimitFloatingWidth: @YES}];
 	
 	{
 		Class cls = UICollectionViewCell.class;
