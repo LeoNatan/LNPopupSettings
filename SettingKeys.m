@@ -26,6 +26,7 @@ PopupSetting const PopupSettingTouchVisualizerEnabled = @"PopupSettingsTouchVisu
 PopupSetting const PopupSettingCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
 PopupSetting const PopupSettingContextMenuEnabled = @"PopupSettingsContextMenuEnabled";
 PopupSetting const PopupSettingLimitFloatingWidth = @"PopupSettingLimitFloatingWidth";
+PopupSetting const PopupSettingTabBarHasSidebar = @"PopupSettingTabBarHasSidebar";
 
 PopupSetting const PopupSettingBarHideContentView = @"__LNPopupBarHideContentView";
 PopupSetting const PopupSettingBarHideShadow = @"__LNPopupBarHideShadow";
@@ -51,7 +52,14 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 	dispatch_once(&onceToken, ^{
 		rv = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.LeoNatan.LNPopupSettings"];
 		
-		[rv registerDefaults:@{PopupSettingLimitFloatingWidth: @YES, PopupSettingHidesBottomBarWhenPushed: @YES, PopupSettingExtendBar: @YES, PopupSettingHapticFeedbackEnabled: @YES, PopupSettingMarqueeCoordinationEnabled: @YES}];
+		[rv registerDefaults:@{
+			PopupSettingLimitFloatingWidth: @YES,
+			PopupSettingHidesBottomBarWhenPushed: @YES,
+			PopupSettingExtendBar: @YES,
+			PopupSettingHapticFeedbackEnabled: @YES,
+			PopupSettingMarqueeCoordinationEnabled: @YES,
+			PopupSettingTabBarHasSidebar: @YES
+		}];
 	});
 	
 	return rv;

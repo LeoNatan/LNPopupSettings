@@ -416,6 +416,7 @@ struct SettingsForm : View {
 	@AppStorage(.forceRTL) var forceRTL: Bool = false
 	@AppStorage(.debugScaling, store: .settings) var debugScaling: Double = 0
 	
+	@AppStorage(.tabBarHasSidebar, store: .settings) var tabBarHasSidebar: Bool = true
 	@AppStorage(.disableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
 	@AppStorage(.enableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
 	@AppStorage(.enableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
@@ -555,6 +556,14 @@ struct SettingsForm : View {
 					CellPaddedToggle("Limit Width of Floating Bar", isOn: $limitFloatingWidth, searchString: searchText)
 				} footer: {
 					LNHeaderFooterView("Limits the width of a floating popup bar to a system-determined value in standard demo scenes.")
+				}
+				
+				if #available(iOS 18.0, *) {
+					SearchAdaptingSection(searchText) { searchText in
+						CellPaddedToggle("Tab \(isLNPopupUIExample ? "Views" : "Bar Controllers") Have Sidebars", isOn: $tabBarHasSidebar, searchString: searchText)
+					} footer: {
+						LNHeaderFooterView("Add support for sidebar to standard tab \(isLNPopupUIExample ? "view" : "bar controller") scenes.")
+					}
 				}
 				
 				if isLNPopupUIExample == false {
@@ -887,7 +896,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}
