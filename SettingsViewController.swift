@@ -558,7 +558,7 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Limits the width of a floating popup bar to a system-determined value in standard demo scenes.")
 				}
 				
-				if #available(iOS 18.0, *) {
+				if #available(iOS 18.0, *), UIDevice.current.userInterfaceIdiom == .pad {
 					SearchAdaptingSection(searchText) { searchText in
 						CellPaddedToggle("Tab \(isLNPopupUIExample ? "Views" : "Bar Controllers") Have Sidebars", isOn: $tabBarHasSidebar, searchString: searchText)
 					} footer: {
