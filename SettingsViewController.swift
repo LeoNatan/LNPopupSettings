@@ -401,6 +401,7 @@ struct SettingsForm : View {
 	@AppStorage(.hapticFeedbackEnabled, store: .settings) var hapticFeedback: Bool = true
 	@AppStorage(.visualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
 	
+	@AppStorage(.enableTransition, store: .settings) var enableTransition = true
 	@AppStorage(.extendBar, store: .settings) var extendBar: Bool = true
 	@AppStorage(.limitFloatingWidth, store: .settings) var limitFloatingWidth: Bool = true
 	@AppStorage(.hidesBottomBarWhenPushed, store: .settings) var hideBottomBar: Bool = true
@@ -541,9 +542,15 @@ struct SettingsForm : View {
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
-					CellPaddedToggle("Extend Bar Under Safe Area", isOn: $extendBar, searchString: searchText)
+					CellPaddedToggle("Enable Image Transition", isOn: $enableTransition, searchString: searchText)
 				} header: {
 					LNHeaderFooterView("Settings")
+				} footer: {
+					LNHeaderFooterView("Enables popup image open and close transitions in standard demo scenes.")
+				}
+				
+				SearchAdaptingSection(searchText) { searchText in
+					CellPaddedToggle("Extend Bar Under Safe Area", isOn: $extendBar, searchString: searchText)
 				} footer: {
 					if isLNPopupUIExample {
 						LNHeaderFooterView("Calls the `popupBarShouldExtendPopupBarUnderSafeArea()` modifier with a value of `true` in standard demo scenes.")
@@ -896,7 +903,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .enableTransition]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}

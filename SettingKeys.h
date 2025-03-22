@@ -20,6 +20,7 @@ extern PopupSetting const PopupSettingMarqueeEnabled;
 extern PopupSetting const PopupSettingMarqueeCoordinationEnabled;
 extern PopupSetting const PopupSettingHapticFeedbackEnabled;
 extern PopupSetting const PopupSettingEnableCustomizations;
+extern PopupSetting const PopupSettingEnableTransition;
 extern PopupSetting const PopupSettingExtendBar;
 extern PopupSetting const PopupSettingHidesBottomBarWhenPushed;
 extern PopupSetting const PopupSettingDisableScrollEdgeAppearance;

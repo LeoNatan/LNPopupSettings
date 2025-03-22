@@ -18,6 +18,7 @@ PopupSetting const PopupSettingMarqueeEnabled = @"PopupSettingsMarqueeEnabled";
 PopupSetting const PopupSettingMarqueeCoordinationEnabled = @"PopupSettingMarqueeCoordinationEnabled";
 PopupSetting const PopupSettingHapticFeedbackEnabled = @"PopupSettingsHapticFeedbackEnabled";
 PopupSetting const PopupSettingEnableCustomizations = @"PopupSettingsEnableCustomizations";
+PopupSetting const PopupSettingEnableTransition = @"PopupSettingEnableTransition";
 PopupSetting const PopupSettingExtendBar = @"PopupSettingsExtendBar";
 PopupSetting const PopupSettingHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";
 PopupSetting const PopupSettingDisableScrollEdgeAppearance = @"PopupSettingsDisableScrollEdgeAppearance";
@@ -58,7 +59,8 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 			PopupSettingExtendBar: @YES,
 			PopupSettingHapticFeedbackEnabled: @YES,
 			PopupSettingMarqueeCoordinationEnabled: @YES,
-			PopupSettingTabBarHasSidebar: @YES
+			PopupSettingTabBarHasSidebar: @YES,
+			PopupSettingEnableTransition: @YES,
 		}];
 	});
 	
