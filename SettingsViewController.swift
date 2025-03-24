@@ -401,7 +401,7 @@ struct SettingsForm : View {
 	@AppStorage(.hapticFeedbackEnabled, store: .settings) var hapticFeedback: Bool = true
 	@AppStorage(.visualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
 	
-	@AppStorage(.enableTransition, store: .settings) var enableTransition = true
+	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
 	@AppStorage(.extendBar, store: .settings) var extendBar: Bool = true
 	@AppStorage(.limitFloatingWidth, store: .settings) var limitFloatingWidth: Bool = true
 	@AppStorage(.hidesBottomBarWhenPushed, store: .settings) var hideBottomBar: Bool = true
@@ -542,11 +542,20 @@ struct SettingsForm : View {
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
-					CellPaddedToggle("Enable Image Transition", isOn: $enableTransition, searchString: searchText)
+					Picker(selection: $transitionType) {
+						CellPaddedText("Preferred").tag(0)
+						CellPaddedText("Generic").tag(1)
+						Divider()
+						CellPaddedText("None").tag(2)
+					} label: {
+						CellPaddedText("Image Transition")
+					}
+					.pickerStyle(.menu)
+					.tint(.secondary)
 				} header: {
 					LNHeaderFooterView("Settings")
 				} footer: {
-					LNHeaderFooterView("Enables popup image open and close transitions in standard demo scenes.")
+					LNHeaderFooterView("Enables or disables popup image open and close transitions in standard demo scenes.\n**Preferred** uses \(isLNPopupUIExample ? "" : "`LNPopupShadowedImageView`") as the image view.\n**Generic** uses a custom \(isLNPopupUIExample ? "`View`" : "`UIView`").")
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
@@ -903,7 +912,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .enableTransition]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}
