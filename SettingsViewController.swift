@@ -544,7 +544,9 @@ struct SettingsForm : View {
 				SearchAdaptingSection(searchText) { searchText in
 					Picker(selection: $transitionType) {
 						CellPaddedText("Preferred").tag(0)
-						CellPaddedText("Generic").tag(1)
+						if !isLNPopupUIExample {
+							CellPaddedText("Generic").tag(1)
+						}
 						Divider()
 						CellPaddedText("None").tag(2)
 					} label: {
@@ -555,7 +557,7 @@ struct SettingsForm : View {
 				} header: {
 					LNHeaderFooterView("Settings")
 				} footer: {
-					LNHeaderFooterView("Enables or disables popup image open and close transitions in standard demo scenes.\n**Preferred** uses \(isLNPopupUIExample ? "" : "`LNPopupShadowedImageView`") as the image view.\n**Generic** uses a custom \(isLNPopupUIExample ? "`View`" : "`UIView`").")
+					LNHeaderFooterView("Enables or disables popup image open and close transitions in standard demo scenes.\n**Preferred** uses \(isLNPopupUIExample ? "the `popupTransitionTarget()` modifier" : "`LNPopupImageView` as the image view").\(isLNPopupUIExample ? "" : "\n**Generic** uses a custom `UIView` for transition.")")
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
