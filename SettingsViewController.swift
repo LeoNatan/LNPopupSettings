@@ -435,6 +435,27 @@ struct SettingsForm : View {
 		self.searchText = isDefault ? "" : searchText
 	}
 	
+	struct TransitionType: Identifiable {
+		let id: Int
+		let title: String
+		let description: String
+		let popupUISupport: Bool
+		
+		var footerDescription: String {
+			"**\(title)** \(description)."
+		}
+	}
+	
+	let transitionTypes: [TransitionType] = [
+		TransitionType(id: 0, title: "Preferred", description: "uses \(isLNPopupUIExample ? "the `popupTransitionTarget()` modifier" : "`LNPopupImageView` as the image view")", popupUISupport: true),
+		TransitionType(id: 2, title: "Full Content View", description: "uses a view that spans the entirety of the popup content view", popupUISupport: false),
+		TransitionType(id: 1, title: "Generic", description: "uses a custom `UIView` for transition", popupUISupport: false),
+	].filter { isLNPopupUIExample == false || $0.popupUISupport == true }
+	
+	func transitionTypeFooterDescription() -> String {
+		transitionTypes.map { $0.footerDescription }.joined(separator: "\n")
+	}
+	
 	@ViewBuilder var body: some View {
 		if isDefault == false && (isSearching == false || searchText.isEmpty) {
 			Color.black.opacity(isSearching ? 0.12 : 0.0).ignoresSafeArea()
@@ -543,12 +564,11 @@ struct SettingsForm : View {
 				
 				SearchAdaptingSection(searchText) { searchText in
 					Picker(selection: $transitionType) {
-						CellPaddedText("Preferred").tag(0)
-						if !isLNPopupUIExample {
-							CellPaddedText("Generic").tag(1)
+						ForEach(transitionTypes) { type in
+							CellPaddedText(type.title).tag(type.id)
 						}
 						Divider()
-						CellPaddedText("None").tag(2)
+						CellPaddedText("None").tag(999)
 					} label: {
 						CellPaddedText("Image Transition")
 					}
@@ -557,7 +577,7 @@ struct SettingsForm : View {
 				} header: {
 					LNHeaderFooterView("Settings")
 				} footer: {
-					LNHeaderFooterView("Enables or disables popup image open and close transitions in standard demo scenes.\n**Preferred** uses \(isLNPopupUIExample ? "the `popupTransitionTarget()` modifier" : "`LNPopupImageView` as the image view").\(isLNPopupUIExample ? "" : "\n**Generic** uses a custom `UIView` for transition.")")
+					LNHeaderFooterView("Enables or disables popup image open and close transitions in standard demo scenes.\n\(transitionTypeFooterDescription())")
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in

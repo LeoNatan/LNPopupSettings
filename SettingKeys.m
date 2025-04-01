@@ -69,6 +69,7 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 
 @end
 
+#if !TARGET_OS_MACCATALYST
 __attribute__((constructor))
 void fixUIKitSwiftUIShit(void)
 {
@@ -123,6 +124,7 @@ void fixUIKitSwiftUIShit(void)
 		[NSUserDefaults.settingDefaults addObserver:(id)self forKeyPath:PopupSettingTouchVisualizerEnabled options:0 context:NULL];
 		[NSUserDefaults.settingDefaults addObserver:(id)self forKeyPath:PopupSettingDebugScaling options:0 context:NULL];
 		
+		
 		[NSNotificationCenter.defaultCenter addObserverForName:UISceneWillConnectNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[self _updateTouchVisualizer];
@@ -167,7 +169,6 @@ void fixUIKitSwiftUIShit(void)
 		
 		for(UIWindow* window in windowScene.windows)
 		{
-			
 			window.layer.allowsEdgeAntialiasing = YES;
 			window.layer.magnificationFilter = kCAFilterTrilinear;
 			window.layer.minificationFilter = kCAFilterTrilinear;
@@ -201,6 +202,8 @@ void fixUIKitSwiftUIShit(void)
 }
 
 @end
+
+#endif
 
 @implementation NSNotificationCenter (LNPopupSettings)
 
