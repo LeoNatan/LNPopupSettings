@@ -448,7 +448,7 @@ struct SettingsForm : View {
 	
 	let transitionTypes: [TransitionType] = [
 		TransitionType(id: 0, title: "Preferred", description: "uses \(isLNPopupUIExample ? "the `popupTransitionTarget()` modifier" : "`LNPopupImageView` as the image view")", popupUISupport: true),
-		TransitionType(id: 2, title: "Full Content View", description: "uses a view that spans the entirety of the popup content view", popupUISupport: false),
+		TransitionType(id: 2, title: "Full Content View", description: "uses a view that spans the entirety of the popup content view", popupUISupport: true),
 		TransitionType(id: 1, title: "Generic", description: "uses a custom `UIView` for transition", popupUISupport: false),
 	].filter { isLNPopupUIExample == false || $0.popupUISupport == true }
 	
