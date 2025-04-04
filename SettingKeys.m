@@ -32,6 +32,7 @@ PopupSetting const PopupSettingTabBarHasSidebar = @"PopupSettingTabBarHasSidebar
 PopupSetting const PopupSettingBarHideContentView = @"__LNPopupBarHideContentView";
 PopupSetting const PopupSettingBarHideShadow = @"__LNPopupBarHideShadow";
 PopupSetting const PopupSettingBarEnableLayoutDebug = @"__LNPopupBarEnableLayoutDebug";
+PopupSetting const PopupSettingEnableSlowTransitionsDebug = @"__LNPopupEnableSlowTransitionsDebug";
 PopupSetting const PopupSettingForceRTL = @"__LNForceRTL";
 PopupSetting const PopupSettingDebugScaling = @"__LNDebugScaling";
 

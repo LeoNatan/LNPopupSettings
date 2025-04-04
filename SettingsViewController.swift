@@ -414,6 +414,7 @@ struct SettingsForm : View {
 	@AppStorage(.barHideContentView, store: .settings) var hidePopupBarContentView: Bool = false
 	@AppStorage(.barHideShadow, store: .settings) var hidePopupBarShadow: Bool = false
 	@AppStorage(.barEnableLayoutDebug, store: .settings) var layoutDebug: Bool = false
+	@AppStorage(.enableSlowTransitionsDebug, store: .settings) var enableSlowTransitionsDebug: Bool = false
 	@AppStorage(.forceRTL) var forceRTL: Bool = false
 	@AppStorage(.debugScaling, store: .settings) var debugScaling: Double = 0
 	
@@ -693,6 +694,7 @@ struct SettingsForm : View {
 					CellPaddedToggle("Layout Debug", isOn: $layoutDebug, searchString: searchText)
 					CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView, searchString: searchText)
 					CellPaddedToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow, searchString: searchText)
+					CellPaddedToggle("Slow Popup Transitions", isOn: $enableSlowTransitionsDebug, searchString: searchText)
 					CellPaddedToggle("Use Right-to-Left Pseudolanguage With Right-to-Left Strings", isOn: $forceRTL, searchString: searchText) {
 						SettingsViewController.toggleRTL { accepted in
 							guard accepted else {
@@ -934,7 +936,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}
