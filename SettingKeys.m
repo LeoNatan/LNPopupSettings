@@ -36,6 +36,7 @@ PopupSetting const PopupSettingEnableSlowTransitionsDebug = @"__LNPopupEnableSlo
 PopupSetting const PopupSettingForceRTL = @"__LNForceRTL";
 PopupSetting const PopupSettingDebugScaling = @"__LNDebugScaling";
 
+PopupSetting const PopupSettingInvertDemoSceneColors = @"__PopupSettingInvertDemoSceneColors";
 PopupSetting const PopupSettingDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
 PopupSetting const PopupSettingEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
 PopupSetting const PopupSettingEnableExternalScenes = @"DemoAppEnableExternalScenes";
@@ -58,10 +59,11 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 			PopupSettingLimitFloatingWidth: @YES,
 			PopupSettingHidesBottomBarWhenPushed: @YES,
 			PopupSettingExtendBar: @YES,
-			PopupSettingHapticFeedbackEnabled: @YES,
+			PopupSettingHapticFeedbackEnabled: @NO,
 			PopupSettingMarqueeCoordinationEnabled: @YES,
 			PopupSettingTabBarHasSidebar: @YES,
 			PopupSettingTransitionType: @0,
+			PopupSettingInvertDemoSceneColors: @YES,
 		}];
 	});
 	
@@ -75,7 +77,7 @@ __attribute__((constructor))
 void fixUIKitSwiftUIShit(void)
 {
 	[NSUserDefaults.standardUserDefaults removeObjectForKey:@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists"];
-	[NSUserDefaults.standardUserDefaults registerDefaults:@{@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists": @YES}];
+//	[NSUserDefaults.standardUserDefaults registerDefaults:@{@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists": @YES}];
 	
 	{
 		Class cls = UICollectionViewCell.class;

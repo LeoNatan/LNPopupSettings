@@ -38,6 +38,7 @@ extern PopupSetting const PopupSettingEnableSlowTransitionsDebug;
 extern PopupSetting const PopupSettingForceRTL;
 extern PopupSetting const PopupSettingDebugScaling;
 
+extern PopupSetting const PopupSettingInvertDemoSceneColors;
 extern PopupSetting const PopupSettingDisableDemoSceneColors;
 extern PopupSetting const PopupSettingEnableFunkyInheritedFont;
 extern PopupSetting const PopupSettingEnableExternalScenes;

@@ -419,6 +419,7 @@ struct SettingsForm : View {
 	@AppStorage(.debugScaling, store: .settings) var debugScaling: Double = 0
 	
 	@AppStorage(.tabBarHasSidebar, store: .settings) var tabBarHasSidebar: Bool = true
+	@AppStorage(.invertDemoSceneColors, store: .settings) var invertDemoSceneColors: Bool = true
 	@AppStorage(.disableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
 	@AppStorage(.enableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
 	@AppStorage(.enableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
@@ -676,6 +677,14 @@ struct SettingsForm : View {
 					}
 				}
 				
+				if !isLNPopupUIExample {
+					SearchAdaptingSection(searchText) { searchText in
+						CellPaddedToggle("Invert Demo Scene Colors", isOn: $invertDemoSceneColors, searchString: searchText)
+					} footer: {
+						LNHeaderFooterView("Inverts random background colors in standard demo scenes.")
+					}
+				}
+				
 				SearchAdaptingSection(searchText) { searchText in
 					CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors, searchString: searchText)
 				} footer: {
@@ -924,11 +933,6 @@ class SettingsViewController: UIHostingController<SettingsView> {
 	
 	class func reset() {
 		let actualReset: (Bool) -> () = { includeRTL in
-			UserDefaults.settings.set(true, forKey: .extendBar)
-			UserDefaults.settings.set(true, forKey: .hidesBottomBarWhenPushed)
-			UserDefaults.settings.set(true, forKey: .hapticFeedbackEnabled)
-			UserDefaults.settings.set(true, forKey: .marqueeCoordinationEnabled)
-			
 			if includeRTL {
 				UserDefaults.standard.removeObject(forKey:	.forceRTL)
 				resetRTL()
@@ -936,7 +940,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}
