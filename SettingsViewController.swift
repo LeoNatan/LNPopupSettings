@@ -477,6 +477,7 @@ struct SettingsForm : View {
 							CellPaddedText("Prominent").tag(LNPopupBar.Style.prominent)
 						}
 						CellPaddedText("Floating").tag(LNPopupBar.Style.floating)
+						CellPaddedText("Floating Compact").tag(LNPopupBar.Style.floatingCompact)
 					}
 				} header: {
 					LNHeaderFooterView("Bar Style")
