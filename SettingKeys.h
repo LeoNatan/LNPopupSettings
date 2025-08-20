@@ -59,4 +59,6 @@ extern PopupSetting const PopupSettingUseScrollingPopupContent;
 
 @end
 
+extern BOOL LNPopupSettingsHasOS26Glass(void);
+
 NS_ASSUME_NONNULL_END

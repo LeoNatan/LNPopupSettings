@@ -472,8 +472,10 @@ struct SettingsForm : View {
 				SearchAdaptingSection(searchText) { _ in
 					Picker(selection: $barStyle) {
 						CellPaddedText("Default").tag(LNPopupBar.Style.default)
-						CellPaddedText("Compact").tag(LNPopupBar.Style.compact)
-						CellPaddedText("Prominent").tag(LNPopupBar.Style.prominent)
+						if !LNPopupSettingsHasOS26Glass() {
+							CellPaddedText("Compact").tag(LNPopupBar.Style.compact)
+							CellPaddedText("Prominent").tag(LNPopupBar.Style.prominent)
+						}
 						CellPaddedText("Floating").tag(LNPopupBar.Style.floating)
 					}
 				} header: {
@@ -515,36 +517,38 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Progress View Style")
 				}
 				
-				SearchAdaptingPickerGroup(searchText, selection: $blurEffectStyle) {
-					PickerGroupContent {
-						CellPaddedText("Default").tag(UIBlurEffect.Style.default)
-					} footer: {
-						LNHeaderFooterView("Uses the default material chosen by the system.")
+				if !LNPopupSettingsHasOS26Glass() {
+					SearchAdaptingPickerGroup(searchText, selection: $blurEffectStyle) {
+						PickerGroupContent {
+							CellPaddedText("Default").tag(UIBlurEffect.Style.default)
+						} footer: {
+							LNHeaderFooterView("Uses the default material chosen by the system.")
+						}
+						PickerGroupContent {
+							CellPaddedText("Ultra Thin Material").tag(UIBlurEffect.Style.systemUltraThinMaterial)
+							CellPaddedText("Thin Material").tag(UIBlurEffect.Style.systemThinMaterial)
+							CellPaddedText("Material").tag(UIBlurEffect.Style.systemMaterial)
+							CellPaddedText("Thick Material").tag(UIBlurEffect.Style.systemThickMaterial)
+							CellPaddedText("Chrome Material").tag(UIBlurEffect.Style.systemChromeMaterial)
+						} footer: {
+							LNHeaderFooterView("Material styles which automatically adapt to the user interface style. Available in iOS 13 and above.")
+						}
+						PickerGroupContent {
+							CellPaddedText("Regular").tag(UIBlurEffect.Style.regular)
+							CellPaddedText("Prominent").tag(UIBlurEffect.Style.prominent)
+						} footer: {
+							LNHeaderFooterView("Styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and above.")
+						}
+						PickerGroupContent {
+							CellPaddedText("Extra Light").tag(UIBlurEffect.Style.extraLight)
+							CellPaddedText("Light").tag(UIBlurEffect.Style.light)
+							CellPaddedText("Dark").tag(UIBlurEffect.Style.dark)
+						} footer: {
+							LNHeaderFooterView("Traditional blur styles. Available in iOS 8 and above.")
+						}
+					} header: {
+						LNHeaderFooterView("Background Blur Style")
 					}
-					PickerGroupContent {
-						CellPaddedText("Ultra Thin Material").tag(UIBlurEffect.Style.systemUltraThinMaterial)
-						CellPaddedText("Thin Material").tag(UIBlurEffect.Style.systemThinMaterial)
-						CellPaddedText("Material").tag(UIBlurEffect.Style.systemMaterial)
-						CellPaddedText("Thick Material").tag(UIBlurEffect.Style.systemThickMaterial)
-						CellPaddedText("Chrome Material").tag(UIBlurEffect.Style.systemChromeMaterial)
-					} footer: {
-						LNHeaderFooterView("Material styles which automatically adapt to the user interface style. Available in iOS 13 and above.")
-					}
-					PickerGroupContent {
-						CellPaddedText("Regular").tag(UIBlurEffect.Style.regular)
-						CellPaddedText("Prominent").tag(UIBlurEffect.Style.prominent)
-					} footer: {
-						LNHeaderFooterView("Styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and above.")
-					}
-					PickerGroupContent {
-						CellPaddedText("Extra Light").tag(UIBlurEffect.Style.extraLight)
-						CellPaddedText("Light").tag(UIBlurEffect.Style.light)
-						CellPaddedText("Dark").tag(UIBlurEffect.Style.dark)
-					} footer: {
-						LNHeaderFooterView("Traditional blur styles. Available in iOS 8 and above.")
-					}
-				} header: {
-					LNHeaderFooterView("Background Blur Style")
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
@@ -798,6 +802,17 @@ struct SettingsForm : View {
 	}
 }
 
+extension View {
+	@ViewBuilder
+	func appropriateButtonStyle() -> some View {
+		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
+			self.buttonStyle(.glassProminent)
+		} else {
+			self.buttonStyle(.plain)
+		}
+	}
+}
+
 struct SettingsView : View {
 	@State private var searchText = ""
 	
@@ -820,23 +835,39 @@ struct SettingsView : View {
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
 			ToolbarItem(placement: .topBarLeading) {
-				Button(NSLocalizedString("Reset", comment: "")) {
+				Button {
 					SettingsViewController.reset()
+				} label: {
+					if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
+						Image(systemName: "arrow.counterclockwise")
+					} else {
+						Text(String(localized: "Reset"))
+					}
 				}
 			}
 			ToolbarItem(placement: .confirmationAction) {
-				Button(NSLocalizedString("Done", comment: "")) {
+				Button {
 					if let onDismiss {
 						onDismiss()
 					} else {
 						self.presentationMode.wrappedValue.dismiss()
 					}
+				} label: {
+					if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
+						Image(systemName: "checkmark")
+							.fontWeight(.semibold)
+					} else {
+						Text(String(localized: "Done"))
+							.bold()
+							.foregroundStyle(.tint)
+					}
 				}
+				.appropriateButtonStyle()
 			}
 		}
 		.pickerStyle(.inline)
 		.animation(.default, value: marqueeEnabled)
-		.searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: NSLocalizedString("Search", comment: ""))
+		.searchable(text: $searchText, prompt: NSLocalizedString("Search", comment: ""))
 	}
 }
 
