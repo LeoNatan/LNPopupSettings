@@ -587,13 +587,15 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Enables or disables popup image open and close transitions in standard demo scenes.\n\(transitionTypeFooterDescription())")
 				}
 				
-				SearchAdaptingSection(searchText) { searchText in
-					CellPaddedToggle("Extend Bar Under Safe Area", isOn: $extendBar, searchString: searchText)
-				} footer: {
-					if isLNPopupUIExample {
-						LNHeaderFooterView("Calls the `popupBarShouldExtendPopupBarUnderSafeArea()` modifier with a value of `true` in standard demo scenes.")
-					} else {
-						LNHeaderFooterView("Sets the `shouldExtendPopupBarUnderSafeArea` property to `true` in standard demo scenes.")
+				if !LNPopupSettingsHasOS26Glass() {
+					SearchAdaptingSection(searchText) { searchText in
+						CellPaddedToggle("Extend Bar Under Safe Area", isOn: $extendBar, searchString: searchText)
+					} footer: {
+						if isLNPopupUIExample {
+							LNHeaderFooterView("Calls the `popupBarShouldExtendPopupBarUnderSafeArea()` modifier with a value of `true` in standard demo scenes.")
+						} else {
+							LNHeaderFooterView("Sets the `shouldExtendPopupBarUnderSafeArea` property to `true` in standard demo scenes.")
+						}
 					}
 				}
 				
