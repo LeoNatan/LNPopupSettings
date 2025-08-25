@@ -88,6 +88,8 @@ extension AppStorage where Value : ExpressibleByNilLiteral {
 }
 
 extension UIBlurEffect.Style {
+	static let `glass` = UIBlurEffect.Style(rawValue: -1)!
+	static let `clearGlass` = UIBlurEffect.Style(rawValue: -2)!
 	static let `default` = UIBlurEffect.Style(rawValue: 0xffff)!
 }
 
@@ -322,11 +324,41 @@ fileprivate struct PickerGroupContentFulfilled {
 }
 
 @resultBuilder
-fileprivate struct PickerGroupContentBuilder {
-	static func buildBlock(_ parts: PickerGroupContent...) -> [PickerGroupContent] {
-		parts
+fileprivate struct ArrayBuilder<T> {
+	public static func build<U>(@ArrayBuilder<U> children: () -> [U]) -> [U] {
+		children()
 	}
+	
+	public static func buildPartialBlock(first: T) -> [T] { [first] }
+	public static func buildPartialBlock(first: T?) -> [T] { if let first { [first] } else { [] } }
+	public static func buildPartialBlock(first: [T]) -> [T] { first }
+	public static func buildPartialBlock(accumulated: [T], next: T) -> [T] { accumulated + [next] }
+	public static func buildPartialBlock(accumulated: [T], next: T?) -> [T] { accumulated + (next != nil ? [next!] : []) }
+	public static func buildPartialBlock(accumulated: [T], next: [T]) -> [T] { accumulated + next }
+	
+	// Empty block
+	public static func buildBlock() -> [T] { [] }
+	
+	// Empty partial block. Useful for switch cases to represent no elements.
+	public static func buildPartialBlock(first: Void) -> [T] { [] }
+	
+	// Impossible partial block. Useful for fatalError().
+	public static func buildPartialBlock(first: Never) -> [T] {}
+	
+	// Block for an 'if' condition.
+	public static func buildIf(_ element: [T]?) -> [T] { element ?? [] }
+	
+	// Block for an 'if' condition which also have an 'else' branch.
+	public static func buildEither(first: [T]) -> [T] { first }
+	
+	// Block for the 'else' branch of an 'if' condition.
+	public static func buildEither(second: [T]) -> [T] { second }
+	
+	// Block for an array of elements. Useful for 'for' loops.
+	public static func buildArray(_ components: [[T]]) -> [T] { components.flatMap { $0 } }
 }
+
+fileprivate typealias PickerGroupContentBuilder = ArrayBuilder<PickerGroupContent>
 
 @MainActor
 fileprivate struct SearchAdaptingPickerGroup<Header: View, SelectionValue: Hashable>: View {
@@ -518,38 +550,44 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Progress View Style")
 				}
 				
-				if !LNPopupSettingsHasOS26Glass() {
-					SearchAdaptingPickerGroup(searchText, selection: $blurEffectStyle) {
-						PickerGroupContent {
-							CellPaddedText("Default").tag(UIBlurEffect.Style.default)
-						} footer: {
-							LNHeaderFooterView("Uses the default material chosen by the system.")
-						}
-						PickerGroupContent {
-							CellPaddedText("Ultra Thin Material").tag(UIBlurEffect.Style.systemUltraThinMaterial)
-							CellPaddedText("Thin Material").tag(UIBlurEffect.Style.systemThinMaterial)
-							CellPaddedText("Material").tag(UIBlurEffect.Style.systemMaterial)
-							CellPaddedText("Thick Material").tag(UIBlurEffect.Style.systemThickMaterial)
-							CellPaddedText("Chrome Material").tag(UIBlurEffect.Style.systemChromeMaterial)
-						} footer: {
-							LNHeaderFooterView("Material styles which automatically adapt to the user interface style. Available in iOS 13 and above.")
-						}
-						PickerGroupContent {
-							CellPaddedText("Regular").tag(UIBlurEffect.Style.regular)
-							CellPaddedText("Prominent").tag(UIBlurEffect.Style.prominent)
-						} footer: {
-							LNHeaderFooterView("Styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and above.")
-						}
-						PickerGroupContent {
-							CellPaddedText("Extra Light").tag(UIBlurEffect.Style.extraLight)
-							CellPaddedText("Light").tag(UIBlurEffect.Style.light)
-							CellPaddedText("Dark").tag(UIBlurEffect.Style.dark)
-						} footer: {
-							LNHeaderFooterView("Traditional blur styles. Available in iOS 8 and above.")
-						}
-					} header: {
-						LNHeaderFooterView("Background Blur Style")
+				SearchAdaptingPickerGroup(searchText, selection: $blurEffectStyle) {
+					PickerGroupContent {
+						CellPaddedText("Default").tag(UIBlurEffect.Style.default)
+					} footer: {
+						LNHeaderFooterView("Uses the default visual effect chosen by the system.")
 					}
+					if LNPopupSettingsHasOS26Glass() {
+						PickerGroupContent {
+							CellPaddedText("Glass").tag(UIBlurEffect.Style.glass)
+							CellPaddedText("Clear Glass").tag(UIBlurEffect.Style.clearGlass)
+						} footer: {
+							LNHeaderFooterView("Glass styles. Available in iOS 26 and above.")
+						}
+					}
+					PickerGroupContent {
+						CellPaddedText("Ultra Thin Material").tag(UIBlurEffect.Style.systemUltraThinMaterial)
+						CellPaddedText("Thin Material").tag(UIBlurEffect.Style.systemThinMaterial)
+						CellPaddedText("Material").tag(UIBlurEffect.Style.systemMaterial)
+						CellPaddedText("Thick Material").tag(UIBlurEffect.Style.systemThickMaterial)
+						CellPaddedText("Chrome Material").tag(UIBlurEffect.Style.systemChromeMaterial)
+					} footer: {
+						LNHeaderFooterView("Blur material styles which automatically adapt to the user interface style. Available in iOS 13 and above.")
+					}
+					PickerGroupContent {
+						CellPaddedText("Regular").tag(UIBlurEffect.Style.regular)
+						CellPaddedText("Prominent").tag(UIBlurEffect.Style.prominent)
+					} footer: {
+						LNHeaderFooterView("Blur styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and above.")
+					}
+					PickerGroupContent {
+						CellPaddedText("Extra Light").tag(UIBlurEffect.Style.extraLight)
+						CellPaddedText("Light").tag(UIBlurEffect.Style.light)
+						CellPaddedText("Dark").tag(UIBlurEffect.Style.dark)
+					} footer: {
+						LNHeaderFooterView("Traditional blur styles. Available in iOS 8 and above.")
+					}
+				} header: {
+					LNHeaderFooterView("Background Visual Effect")
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
@@ -599,10 +637,12 @@ struct SettingsForm : View {
 					}
 				}
 				
-				SearchAdaptingSection(searchText) { searchText in
-					CellPaddedToggle("Limit Width of Floating Bar", isOn: $limitFloatingWidth, searchString: searchText)
-				} footer: {
-					LNHeaderFooterView("Limits the width of a floating popup bar to a system-determined value in standard demo scenes.")
+				if UIDevice.current.userInterfaceIdiom == .pad {
+					SearchAdaptingSection(searchText) { searchText in
+						CellPaddedToggle("Limit Width of Floating Bar", isOn: $limitFloatingWidth, searchString: searchText)
+					} footer: {
+						LNHeaderFooterView("Limits the width of a floating popup bar to a system-determined value in standard demo scenes.")
+					}
 				}
 				
 				if #available(iOS 18.0, *), UIDevice.current.userInterfaceIdiom == .pad {
@@ -620,10 +660,12 @@ struct SettingsForm : View {
 						LNHeaderFooterView("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
 					}
 					
-					SearchAdaptingSection(searchText) { searchText in
-						CellPaddedToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance, searchString: searchText)
-					} footer: {
-						LNHeaderFooterView("Disables the scroll edge appearance for system bars in standard demo scenes.")
+					if !LNPopupSettingsHasOS26Glass() {
+						SearchAdaptingSection(searchText) { searchText in
+							CellPaddedToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance, searchString: searchText)
+						} footer: {
+							LNHeaderFooterView("Disables the scroll edge appearance for system bars in standard demo scenes.")
+						}
 					}
 				}
 				
