@@ -858,6 +858,17 @@ extension View {
 	}
 }
 
+extension View {
+	@ViewBuilder
+	func searchable<S: StringProtocol>(text: Binding<String>, prompt: S) -> some View {
+		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass(), UIDevice.current.userInterfaceIdiom != .pad {
+			self.searchable(text: text, placement: .toolbar, prompt: prompt)
+		} else {
+			self.searchable(text: text, placement: .navigationBarDrawer(displayMode: .always), prompt: prompt)
+		}
+	}
+}
+
 struct SettingsView : View {
 	@State private var searchText = ""
 	
