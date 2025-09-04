@@ -850,11 +850,15 @@ struct SettingsForm : View {
 extension View {
 	@ViewBuilder
 	func appropriateButtonStyle() -> some View {
+#if compiler(>=6.2)
 		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
 			self.buttonStyle(.glassProminent)
 		} else {
 			self.buttonStyle(.plain)
 		}
+#else
+		buttonStyle(.plain)
+#endif
 	}
 }
 
