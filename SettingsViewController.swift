@@ -119,10 +119,10 @@ fileprivate struct LNText: View {
 		
 		@AppStorage(PopupSetting.forceRTL) var forceRTL: Bool = false
 		
-		if isLNPopupUIExample || forceRTL == false {
+		if forceRTL == false {
 			text = Text(LocalizedStringKey(content))
 		} else {
-			text = Text(content.applyingTransform(.latinToHebrew, reverse: false)!)
+			text = Text(Bundle.main.localizedString(forKey: content, value: nil, table: nil))
 		}
 	}
 	
@@ -801,7 +801,7 @@ struct SettingsForm : View {
 								} footer: {
 									LNHeaderFooterView("Max & Plus phones.")
 								}
-							}.pickerStyle(.inline).navigationTitle("Scaling")
+							}.pickerStyle(.inline).navigationTitle(NSLocalizedString("Scaling", comment: ""))
 						} label: {
 							HStack {
 								CellPaddedText("Scaling")

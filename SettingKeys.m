@@ -240,3 +240,71 @@ extern BOOL LNPopupSettingsHasOS26Glass(void)
 	
 	return rv;
 }
+
+@interface NSBundle ()
+
+- (NSAttributedString *)localizedAttributedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)tableName localization:(id)arg4;
+
+@end
+
+@interface NSBundle (HebrewTransliteration) @end
+
+@implementation NSBundle (HebrewTransliteration)
+
+- (NSString *)_hebrew_localizedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)tableName localizations:(id)arg4
+{
+	return [self _hebrew_localizedStringForKey:key value:value table:tableName];
+}
+
+- (NSAttributedString *)_hebrew_localizedAttributedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)tableName
+{
+	return [[NSAttributedString alloc] initWithString:[self _hebrew_localizedStringForKey:key value:value table:tableName]];
+}
+
+- (NSAttributedString *)_hebrew_localizedAttributedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)tableName localization:(id)arg4
+{
+	return [[NSAttributedString alloc] initWithString:[self _hebrew_localizedStringForKey:key value:value table:tableName]];
+}
+
+- (NSString *)_hebrew_localizedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)tableName
+{
+	NSString* stringToTransliterate = value.length > 0 && [value isEqualToString:@"<unlocalized>"] == NO ? value : key;
+	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"LNPopupController" withString:@"אֶלְאֶנפּוֹפּאָפְּקוֹנְטְרוֹלֶר"];
+	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"LNPopupUI" withString:@"אֶלְאֶנפּוֹפּאָפְּיֻואָיְי"];
+	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"LNPopup" withString:@"אֶלְאֶנפּוֹפּאָפ"];
+	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"Controller" withString:@"קוֹנְטְרוֹלֶר"];
+	stringToTransliterate = [[stringToTransliterate stringByReplacingOccurrencesOfString:@"ll" withString:@"l"] stringByReplacingOccurrencesOfString:@"tt" withString:@"t"];
+	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"View" withString:@"וְיוֻ"];
+	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"[MapKit] Apple Maps Brand Mark" withString:@"מַפס"];
+	
+	return [stringToTransliterate stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
+}
+
++ (void)load
+{
+	@autoreleasepool
+	{
+		if([NSUserDefaults.standardUserDefaults boolForKey:PopupSettingForceRTL] == NO)
+		{
+			return;
+		}
+		
+		Method m1 = class_getInstanceMethod(NSBundle.class, @selector(localizedStringForKey:value:table:));
+		Method m2 = class_getInstanceMethod(NSBundle.class, @selector(_hebrew_localizedStringForKey:value:table:));
+		method_exchangeImplementations(m1, m2);
+		
+		m1 = class_getInstanceMethod(NSBundle.class, @selector(localizedStringForKey:value:table:localizations:));
+		m2 = class_getInstanceMethod(NSBundle.class, @selector(_hebrew_localizedStringForKey:value:table:localizations:));
+		method_exchangeImplementations(m1, m2);
+		
+		m1 = class_getInstanceMethod(NSBundle.class, @selector(localizedAttributedStringForKey:value:table:));
+		m2 = class_getInstanceMethod(NSBundle.class, @selector(_hebrew_localizedAttributedStringForKey:value:table:));
+		method_exchangeImplementations(m1, m2);
+		
+		m1 = class_getInstanceMethod(NSBundle.class, @selector(localizedAttributedStringForKey:value:table:localization:));
+		m2 = class_getInstanceMethod(NSBundle.class, @selector(_hebrew_localizedAttributedStringForKey:value:table:localization:));
+		method_exchangeImplementations(m1, m2);
+	}
+}
+
+@end
