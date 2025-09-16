@@ -76,8 +76,10 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 __attribute__((constructor))
 void fixUIKitSwiftUIShit(void)
 {
-	[NSUserDefaults.standardUserDefaults removeObjectForKey:@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists"];
-//	[NSUserDefaults.standardUserDefaults registerDefaults:@{@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists": @YES}];
+	if(LNPopupSettingsHasOS26Glass())
+	{
+		return;
+	}
 	
 	{
 		Class cls = UICollectionViewCell.class;
