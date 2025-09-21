@@ -827,21 +827,6 @@ struct SettingsForm : View {
 
 extension View {
 	@ViewBuilder
-	func appropriateButtonStyle() -> some View {
-#if compiler(>=6.2)
-		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
-			self.buttonStyle(.glassProminent)
-		} else {
-			self.buttonStyle(.plain)
-		}
-#else
-		buttonStyle(.plain)
-#endif
-	}
-}
-
-extension View {
-	@ViewBuilder
 	func searchable<S: StringProtocol>(text: Binding<String>, prompt: S) -> some View {
 		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass(), UIDevice.current.userInterfaceIdiom != .pad {
 			self.searchable(text: text, placement: .toolbar, prompt: prompt)
@@ -849,6 +834,26 @@ extension View {
 			self.searchable(text: text, placement: .navigationBarDrawer(displayMode: .always), prompt: prompt)
 		}
 	}
+}
+
+struct ToolbarLabelStyle: LabelStyle {
+	let done: Bool
+	
+	func makeBody(configuration: Configuration) -> some View {
+		if #available(iOS 26, *) {
+			Label(configuration)
+		} else {
+			Label(configuration)
+				.labelStyle(.titleOnly)
+				.foregroundStyle(.tint)
+				.bold(done)
+		}
+	}
+}
+
+extension LabelStyle where Self == ToolbarLabelStyle {
+	static var toolbar: Self { .init(done: false) }
+	static var toolbarDone: Self { .init(done: true) }
 }
 
 struct SettingsView : View {
@@ -876,11 +881,8 @@ struct SettingsView : View {
 				Button {
 					SettingsViewController.reset()
 				} label: {
-					if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
-						Image(systemName: "arrow.counterclockwise")
-					} else {
-						Text(String(localized: "Reset"))
-					}
+					Label("Reset", systemImage: "arrow.counterclockwise")
+						.labelStyle(.toolbar)
 				}
 			}
 			ToolbarItem(placement: .confirmationAction) {
@@ -891,16 +893,9 @@ struct SettingsView : View {
 						self.presentationMode.wrappedValue.dismiss()
 					}
 				} label: {
-					if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
-						Image(systemName: "checkmark")
-							.fontWeight(.semibold)
-					} else {
-						Text(String(localized: "Done"))
-							.bold()
-							.foregroundStyle(.tint)
-					}
+					Label("Done", systemImage: "checkmark")
+						.labelStyle(.toolbarDone)
 				}
-				.appropriateButtonStyle()
 			}
 		}
 		.pickerStyle(.inline)
