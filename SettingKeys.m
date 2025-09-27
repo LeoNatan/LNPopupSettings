@@ -38,6 +38,7 @@ PopupSetting const PopupSettingDebugScaling = @"__LNDebugScaling";
 
 PopupSetting const PopupSettingInvertDemoSceneColors = @"__PopupSettingInvertDemoSceneColors";
 PopupSetting const PopupSettingDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
+PopupSetting const PopupSettingLongerLoremIpsumTitles = @"__PopupSettingLongerLoremIpsumTitles";
 PopupSetting const PopupSettingEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
 PopupSetting const PopupSettingEnableExternalScenes = @"DemoAppEnableExternalScenes";
 
@@ -60,6 +61,7 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 			PopupSettingHidesBottomBarWhenPushed: @YES,
 			PopupSettingExtendBar: @YES,
 			PopupSettingHapticFeedbackEnabled: @NO,
+			PopupSettingMarqueeEnabled: @(LNPopupSettingsHasOS26Glass() ? YES : NO),
 			PopupSettingMarqueeCoordinationEnabled: @YES,
 			PopupSettingTabBarHasSidebar: @YES,
 			PopupSettingTransitionType: @0,
@@ -278,6 +280,7 @@ extern BOOL LNPopupSettingsHasOS26Glass(void)
 	stringToTransliterate = [[stringToTransliterate stringByReplacingOccurrencesOfString:@"ll" withString:@"l"] stringByReplacingOccurrencesOfString:@"tt" withString:@"t"];
 	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"View" withString:@"וְיוֻ"];
 	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"[MapKit] Apple Maps Brand Mark" withString:@"מַפס"];
+	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"Exit" withString:@"אֶקְזִיט"];
 	
 	return [stringToTransliterate stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
 }

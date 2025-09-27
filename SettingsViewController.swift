@@ -430,6 +430,7 @@ struct SettingsForm : View {
 	
 	@AppStorage(.tabBarHasSidebar, store: .settings) var tabBarHasSidebar: Bool = true
 	@AppStorage(.invertDemoSceneColors, store: .settings) var invertDemoSceneColors: Bool = true
+	@AppStorage(.longerLoremIpsumTitles, store: .settings) var longerLoremIpsumTitles: Bool = false
 	@AppStorage(.disableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
 	@AppStorage(.enableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
 	@AppStorage(.enableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
@@ -575,6 +576,14 @@ struct SettingsForm : View {
 					}
 				} header: {
 					LNHeaderFooterView("Marquee")
+				}
+				
+				if !isLNPopupUIExample {
+					SearchAdaptingSection(searchText) { searchText in
+						LNToggle("Longer Lorem Ipsum Titles", isOn: $longerLoremIpsumTitles, searchString: searchText)
+					} footer: {
+						LNHeaderFooterView("Sets popup bar titles to longer lorem ipsum strings in standard demo scenes.")
+					}
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
@@ -1004,7 +1013,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}
