@@ -640,13 +640,17 @@ struct SettingsForm : View {
 					}
 				}
 				
-				if isLNPopupUIExample == false {
-					SearchAdaptingSection(searchText) { searchText in
-						LNToggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar, searchString: searchText)
-					} footer: {
+				SearchAdaptingSection(searchText) { searchText in
+					LNToggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar, searchString: searchText)
+				} footer: {
+					if isLNPopupUIExample == false {
 						LNHeaderFooterView("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
+					} else {
+						LNHeaderFooterView("Hides the bottom bar when pushing in a NavigationStack in standard demo scenes.")
 					}
-					
+				}
+				
+				if isLNPopupUIExample == false {
 					if !LNPopupSettingsHasOS26Glass() {
 						SearchAdaptingSection(searchText) { searchText in
 							LNToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance, searchString: searchText)
