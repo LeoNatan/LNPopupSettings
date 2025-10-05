@@ -23,6 +23,7 @@ PopupSetting const PopupSettingExtendBar = @"PopupSettingsExtendBar";
 PopupSetting const PopupSettingHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";
 PopupSetting const PopupSettingDisableScrollEdgeAppearance = @"PopupSettingsDisableScrollEdgeAppearance";
 PopupSetting const PopupSettingVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
+PopupSetting const PopupSettingShineEnabled = @"PopupSettingShineEnabled";
 PopupSetting const PopupSettingTouchVisualizerEnabled = @"PopupSettingsTouchVisualizerEnabled";
 PopupSetting const PopupSettingCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
 PopupSetting const PopupSettingContextMenuEnabled = @"PopupSettingsContextMenuEnabled";
@@ -222,7 +223,7 @@ void fixUIKitSwiftUIShit(void)
 @end
 
 
-extern BOOL LNPopupSettingsHasOS26Glass(void)
+BOOL LNPopupSettingsHasOS26Glass(void)
 {
 	static BOOL rv;
 	
@@ -243,6 +244,13 @@ extern BOOL LNPopupSettingsHasOS26Glass(void)
 	});
 	
 	return rv;
+}
+
+UIButton* LNPopupShinyButton(void)
+{
+	UIButtonConfiguration* config = [UIButtonConfiguration valueForKey:@"_posterSwitcherGlassButtonConfiguration"];
+	UIButton* button = [UIButton buttonWithConfiguration:config primaryAction:nil];
+	return button;
 }
 
 @interface NSBundle ()

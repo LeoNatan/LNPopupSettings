@@ -25,6 +25,7 @@ extern PopupSetting const PopupSettingExtendBar;
 extern PopupSetting const PopupSettingHidesBottomBarWhenPushed;
 extern PopupSetting const PopupSettingDisableScrollEdgeAppearance;
 extern PopupSetting const PopupSettingVisualEffectViewBlurEffect;
+extern PopupSetting const PopupSettingShineEnabled;
 extern PopupSetting const PopupSettingTouchVisualizerEnabled;
 extern PopupSetting const PopupSettingCustomBarEverywhereEnabled;
 extern PopupSetting const PopupSettingContextMenuEnabled;
@@ -61,5 +62,7 @@ extern PopupSetting const PopupSettingUseScrollingPopupContent;
 @end
 
 extern BOOL LNPopupSettingsHasOS26Glass(void);
+
+extern UIButton* LNPopupShinyButton(void) API_AVAILABLE(ios(26.0));
 
 NS_ASSUME_NONNULL_END

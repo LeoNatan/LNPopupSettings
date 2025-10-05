@@ -410,6 +410,7 @@ struct SettingsForm : View {
 	@AppStorage(.marqueeCoordinationEnabled, store: .settings) var marqueeCoordinationEnabled: Bool = true
 	@AppStorage(.hapticFeedbackEnabled, store: .settings) var hapticFeedback: Bool = true
 	@AppStorage(.visualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
+	@AppStorage(.shineEnabled, store: .settings) var shineEnabled: Bool = false
 	
 	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
 	@AppStorage(.extendBar, store: .settings) var extendBar: Bool = true
@@ -567,6 +568,14 @@ struct SettingsForm : View {
 					}
 				} header: {
 					LNHeaderFooterView("Background Visual Effect")
+				}
+				
+				SearchAdaptingSection(searchText) { searchText in
+					LNToggle("Bar Shine", isOn: $shineEnabled, searchString: searchText)
+				} header: {
+					LNHeaderFooterView("Shine")
+				} footer: {
+					LNHeaderFooterView("Enables popup bar shine in standard demo scenes.")
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
@@ -1017,7 +1026,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}
