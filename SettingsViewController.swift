@@ -405,6 +405,7 @@ struct SettingsForm : View {
 	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
 	@AppStorage(.interactionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
 	@AppStorage(.closeButtonStyle, store: .settings) var closeButtonStyle: LNPopupCloseButton.Style = .default
+	@AppStorage(.closeButtonPositioning, store: .settings) var closeButtonPositioning: LNPopupCloseButton.Positioning = .default
 	@AppStorage(.progressViewStyle, store: .settings) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
 	@AppStorage(.marqueeEnabled, store: .settings) var marqueeEnabled: Bool = false
 	@AppStorage(.marqueeCoordinationEnabled, store: .settings) var marqueeCoordinationEnabled: Bool = true
@@ -484,12 +485,12 @@ struct SettingsForm : View {
 				SearchAdaptingSection(searchText) { _ in
 					Picker(selection: $barStyle) {
 						LNText("Default").tag(LNPopupBar.Style.default)
+						LNText("Floating Compact").tag(LNPopupBar.Style.floatingCompact)
+						LNText("Floating").tag(LNPopupBar.Style.floating)
 						if !LNPopupSettingsHasOS26Glass() {
 							LNText("Compact").tag(LNPopupBar.Style.compact)
 							LNText("Prominent").tag(LNPopupBar.Style.prominent)
 						}
-						LNText("Floating").tag(LNPopupBar.Style.floating)
-						LNText("Floating Compact").tag(LNPopupBar.Style.floatingCompact)
 					}
 				} header: {
 					LNHeaderFooterView("Bar Style")
@@ -498,8 +499,8 @@ struct SettingsForm : View {
 				SearchAdaptingSection(searchText) { _ in
 					Picker(selection: $interactionStyle) {
 						LNText("Default").tag(UIViewController.__PopupInteractionStyle.default)
-						LNText("Drag").tag(UIViewController.__PopupInteractionStyle.drag)
 						LNText("Snap").tag(UIViewController.__PopupInteractionStyle.snap)
+						LNText("Drag").tag(UIViewController.__PopupInteractionStyle.drag)
 						LNText("Scroll").tag(UIViewController.__PopupInteractionStyle.scroll)
 						LNText("None").tag(UIViewController.__PopupInteractionStyle.none)
 					}
@@ -507,16 +508,49 @@ struct SettingsForm : View {
 					LNHeaderFooterView("Interaction Style")
 				}
 				
-				SearchAdaptingSection(searchText) { _ in
-					Picker(selection: $closeButtonStyle) {
+
+				SearchAdaptingPickerGroup(searchText, selection: $closeButtonStyle) {
+					PickerGroupContent {
 						LNText("Default").tag(LNPopupCloseButton.Style.default)
-						LNText("Round").tag(LNPopupCloseButton.Style.round)
-						LNText("Chevron").tag(LNPopupCloseButton.Style.chevron)
+					} footer: {
+						LNHeaderFooterView("Uses the default popup close button style chosen by the system.")
+					}
+					if #available(iOS 26.0, *) {
+						PickerGroupContent {
+							LNText("Glass").tag(LNPopupCloseButton.Style.glass)
+							LNText("Clear Glass").tag(LNPopupCloseButton.Style.clearGlass)
+							LNText("Prominent Glass").tag(LNPopupCloseButton.Style.prominentGlass)
+							LNText("Prominent Clear Glass").tag(LNPopupCloseButton.Style.prominentClearGlass)
+							LNText("Shiny Glass").tag(LNPopupCloseButton.Style.shinyGlass)
+						} footer: {
+							Text("Glass popup close buttons. Available in iOS 26 and later.")
+						}
+					}
+					PickerGroupContent {
 						LNText("Grabber").tag(LNPopupCloseButton.Style.grabber)
+						LNText("Chevron").tag(LNPopupCloseButton.Style.chevron)
+						LNText("Round").tag(LNPopupCloseButton.Style.round)
+					} footer: {
+						Text("Standard popup close buttons.")
+					}
+					PickerGroupContent {
 						LNText("None").tag(LNPopupCloseButton.Style.none)
+					} footer: {
+						Text("No popup close button.")
 					}
 				} header: {
 					LNHeaderFooterView("Close Button Style")
+				}
+				
+				SearchAdaptingSection(searchText) { _ in
+					Picker(selection: $closeButtonPositioning) {
+						LNText("Default").tag(LNPopupCloseButton.Positioning.default)
+						LNText("Leading").tag(LNPopupCloseButton.Positioning.leading)
+						LNText("Center").tag(LNPopupCloseButton.Positioning.center)
+						LNText("Trailing").tag(LNPopupCloseButton.Positioning.trailing)
+					}
+				} header: {
+					LNHeaderFooterView("Close Button Positioning")
 				}
 				
 				SearchAdaptingSection(searchText) { _ in
@@ -541,7 +575,7 @@ struct SettingsForm : View {
 							LNText("Glass").tag(UIBlurEffect.Style.glass)
 							LNText("Clear Glass").tag(UIBlurEffect.Style.clearGlass)
 						} footer: {
-							LNHeaderFooterView("Glass styles. Available in iOS 26 and above.")
+							LNHeaderFooterView("Glass styles. Available in iOS 26 and later.")
 						}
 					}
 					PickerGroupContent {
@@ -551,31 +585,33 @@ struct SettingsForm : View {
 						LNText("Thick Material").tag(UIBlurEffect.Style.systemThickMaterial)
 						LNText("Chrome Material").tag(UIBlurEffect.Style.systemChromeMaterial)
 					} footer: {
-						LNHeaderFooterView("Blur material styles which automatically adapt to the user interface style. Available in iOS 13 and above.")
+						LNHeaderFooterView("Blur material styles which automatically adapt to the user interface style. Available in iOS 13 and later.")
 					}
 					PickerGroupContent {
 						LNText("Regular").tag(UIBlurEffect.Style.regular)
 						LNText("Prominent").tag(UIBlurEffect.Style.prominent)
 					} footer: {
-						LNHeaderFooterView("Blur styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and above.")
+						LNHeaderFooterView("Blur styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and later.")
 					}
 					PickerGroupContent {
 						LNText("Extra Light").tag(UIBlurEffect.Style.extraLight)
 						LNText("Light").tag(UIBlurEffect.Style.light)
 						LNText("Dark").tag(UIBlurEffect.Style.dark)
 					} footer: {
-						LNHeaderFooterView("Traditional blur styles. Available in iOS 8 and above.")
+						LNHeaderFooterView("Traditional blur styles. Available in iOS 8 and later.")
 					}
 				} header: {
 					LNHeaderFooterView("Background Visual Effect")
 				}
 				
-				SearchAdaptingSection(searchText) { searchText in
-					LNToggle("Bar Shine", isOn: $shineEnabled, searchString: searchText)
-				} header: {
-					LNHeaderFooterView("Shine")
-				} footer: {
-					LNHeaderFooterView("Enables popup bar shine in standard demo scenes.")
+				if LNPopupSettingsHasOS26Glass() {
+					SearchAdaptingSection(searchText) { searchText in
+						LNToggle("Bar Shine", isOn: $shineEnabled, searchString: searchText)
+					} header: {
+						LNHeaderFooterView("Shine")
+					} footer: {
+						LNHeaderFooterView("Enables popup bar shine in standard demo scenes.")
+					}
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
@@ -1026,7 +1062,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}

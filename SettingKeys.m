@@ -14,6 +14,7 @@ PopupSetting const PopupSettingBarStyle = @"PopupSettingsBarStyle";
 PopupSetting const PopupSettingInteractionStyle = @"PopupSettingsInteractionStyle";
 PopupSetting const PopupSettingProgressViewStyle = @"PopupSettingsProgressViewStyle";
 PopupSetting const PopupSettingCloseButtonStyle = @"PopupSettingsCloseButtonStyle";
+PopupSetting const PopupSettingCloseButtonPositioning = @"PopupSettingCloseButtonPositioning";
 PopupSetting const PopupSettingMarqueeEnabled = @"PopupSettingsMarqueeEnabled";
 PopupSetting const PopupSettingMarqueeCoordinationEnabled = @"PopupSettingMarqueeCoordinationEnabled";
 PopupSetting const PopupSettingHapticFeedbackEnabled = @"PopupSettingsHapticFeedbackEnabled";

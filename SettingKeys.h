@@ -16,6 +16,7 @@ extern PopupSetting const PopupSettingBarStyle;
 extern PopupSetting const PopupSettingInteractionStyle;
 extern PopupSetting const PopupSettingProgressViewStyle;
 extern PopupSetting const PopupSettingCloseButtonStyle;
+extern PopupSetting const PopupSettingCloseButtonPositioning;
 extern PopupSetting const PopupSettingMarqueeEnabled;
 extern PopupSetting const PopupSettingMarqueeCoordinationEnabled;
 extern PopupSetting const PopupSettingHapticFeedbackEnabled;
