@@ -739,12 +739,14 @@ struct SettingsForm : View {
 							LNText("Vertical").tag(10)
 							LNText("Horizontal").tag(11)
 							
-							LNText("Paged Vertical").tag(20)
-							LNText("Paged Horizontal").tag(21)
-							LNText("Paged Vertical & Paged Horizontal").tag(22)
-							LNText("Paged Horizontal & Paged Vertical").tag(23)
+							LNText("Paged (V)").tag(20)
+							LNText("Paged (H)").tag(21)
+							LNText("Paged (V + H)").tag(22)
+							LNText("Paged (H + V)").tag(23)
 							
 							LNText("Map View").tag(100)
+							
+							LNText("Settings").tag(200)
 						} label: {
 							LNText("Scrolling Popup Content")
 						}
@@ -752,10 +754,20 @@ struct SettingsForm : View {
 						.tint(.secondary)
 					} footer: {
 						switch useScrollingPopupContent {
-						case 1:
+						case 10:
 							LNHeaderFooterView("Uses vertical scrolling popup content in standard demo scenes.")
-						case 2:
+						case 11:
 							LNHeaderFooterView("Uses horizontal scrolling popup content in standard demo scenes.")
+							
+						case 20, 21, 22, 23:
+							LNHeaderFooterView("Uses paged scrolling popup content in standard demo scenes.")
+							
+						case 100:
+							LNHeaderFooterView("Uses map view popup content in standard demo scenes.")
+							
+						case 200:
+							LNHeaderFooterView("Uses settings scrolling popup content in standard demo scenes.")
+							
 						default:
 							LNHeaderFooterView("Uses standard popup content in standard demo scenes.")
 						}
@@ -788,7 +800,7 @@ struct SettingsForm : View {
 					LNToggle("Layout Debug", isOn: $layoutDebug, searchString: searchText)
 					LNToggle("Hide Content View", isOn: $hidePopupBarContentView, searchString: searchText)
 					LNToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow, searchString: searchText)
-					LNToggle("Slow Popup Transitions", isOn: $enableSlowTransitionsDebug, searchString: searchText)
+					LNToggle("Slow Bar & Popup Transitions", isOn: $enableSlowTransitionsDebug, searchString: searchText)
 					LNToggle("Use Right-to-Left Pseudolanguage With Right-to-Left Strings", isOn: $forceRTL, searchString: searchText) {
 						SettingsViewController.toggleRTL { accepted in
 							guard accepted else {
