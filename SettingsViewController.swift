@@ -148,18 +148,6 @@ fileprivate func LNTextCollector<Content>(_ container: inout [String], content: 
 }
 
 @MainActor
-fileprivate struct LNHeaderFooterView: View {
-	let content: LNText
-	public init(_ content: String) {
-		self.content = LNText(content)
-	}
-	
-	var body: some View {
-		content.font(.footnote)
-	}
-}
-
-@MainActor
 fileprivate struct LNToggle: View {
 	let isHidden: Bool
 	let title: LNText
@@ -493,7 +481,7 @@ struct SettingsForm : View {
 						}
 					}
 				} header: {
-					LNHeaderFooterView("Bar Style")
+					LNText("Bar Style")
 				}
 				
 				SearchAdaptingSection(searchText) { _ in
@@ -505,7 +493,7 @@ struct SettingsForm : View {
 						LNText("None").tag(UIViewController.__PopupInteractionStyle.none)
 					}
 				} header: {
-					LNHeaderFooterView("Interaction Style")
+					LNText("Interaction Style")
 				}
 				
 
@@ -513,7 +501,7 @@ struct SettingsForm : View {
 					PickerGroupContent {
 						LNText("Default").tag(LNPopupCloseButton.Style.default)
 					} footer: {
-						LNHeaderFooterView("Uses the default popup close button style chosen by the system.")
+						LNText("Uses the default popup close button style chosen by the system.")
 					}
 					if #available(iOS 26.0, *) {
 						PickerGroupContent {
@@ -539,7 +527,7 @@ struct SettingsForm : View {
 						Text("No popup close button.")
 					}
 				} header: {
-					LNHeaderFooterView("Close Button Style")
+					LNText("Close Button Style")
 				}
 				
 				SearchAdaptingSection(searchText) { _ in
@@ -550,7 +538,7 @@ struct SettingsForm : View {
 						LNText("Trailing").tag(LNPopupCloseButton.Positioning.trailing)
 					}
 				} header: {
-					LNHeaderFooterView("Close Button Positioning")
+					LNText("Close Button Positioning")
 				}
 				
 				SearchAdaptingSection(searchText) { _ in
@@ -561,21 +549,21 @@ struct SettingsForm : View {
 						LNText("None").tag(LNPopupBar.ProgressViewStyle.none)
 					}
 				} header: {
-					LNHeaderFooterView("Progress View Style")
+					LNText("Progress View Style")
 				}
 				
 				SearchAdaptingPickerGroup(searchText, selection: $blurEffectStyle) {
 					PickerGroupContent {
 						LNText("Default").tag(UIBlurEffect.Style.default)
 					} footer: {
-						LNHeaderFooterView("Uses the default visual effect chosen by the system.")
+						LNText("Uses the default visual effect chosen by the system.")
 					}
 					if LNPopupSettingsHasOS26Glass() {
 						PickerGroupContent {
 							LNText("Glass").tag(UIBlurEffect.Style.glass)
 							LNText("Clear Glass").tag(UIBlurEffect.Style.clearGlass)
 						} footer: {
-							LNHeaderFooterView("Glass styles. Available in iOS 26 and later.")
+							LNText("Glass styles. Available in iOS 26 and later.")
 						}
 					}
 					PickerGroupContent {
@@ -585,32 +573,32 @@ struct SettingsForm : View {
 						LNText("Thick Material").tag(UIBlurEffect.Style.systemThickMaterial)
 						LNText("Chrome Material").tag(UIBlurEffect.Style.systemChromeMaterial)
 					} footer: {
-						LNHeaderFooterView("Blur material styles which automatically adapt to the user interface style. Available in iOS 13 and later.")
+						LNText("Blur material styles which automatically adapt to the user interface style. Available in iOS 13 and later.")
 					}
 					PickerGroupContent {
 						LNText("Regular").tag(UIBlurEffect.Style.regular)
 						LNText("Prominent").tag(UIBlurEffect.Style.prominent)
 					} footer: {
-						LNHeaderFooterView("Blur styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and later.")
+						LNText("Blur styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and later.")
 					}
 					PickerGroupContent {
 						LNText("Extra Light").tag(UIBlurEffect.Style.extraLight)
 						LNText("Light").tag(UIBlurEffect.Style.light)
 						LNText("Dark").tag(UIBlurEffect.Style.dark)
 					} footer: {
-						LNHeaderFooterView("Traditional blur styles. Available in iOS 8 and later.")
+						LNText("Traditional blur styles. Available in iOS 8 and later.")
 					}
 				} header: {
-					LNHeaderFooterView("Background Visual Effect")
+					LNText("Background Visual Effect")
 				}
 				
 				if LNPopupSettingsHasOS26Glass() {
 					SearchAdaptingSection(searchText) { searchText in
 						LNToggle("Bar Shine", isOn: $shineEnabled, searchString: searchText)
 					} header: {
-						LNHeaderFooterView("Shine")
+						LNText("Shine")
 					} footer: {
-						LNHeaderFooterView("Enables popup bar shine in standard demo scenes.")
+						LNText("Enables popup bar shine in standard demo scenes.")
 					}
 				}
 				
@@ -620,23 +608,23 @@ struct SettingsForm : View {
 						LNToggle("Coordinate Marquee Labels", isOn: $marqueeCoordinationEnabled, searchString: searchText)
 					}
 				} header: {
-					LNHeaderFooterView("Marquee")
+					LNText("Marquee")
 				}
 				
 				if !isLNPopupUIExample {
 					SearchAdaptingSection(searchText) { searchText in
 						LNToggle("Longer Lorem Ipsum Titles", isOn: $longerLoremIpsumTitles, searchString: searchText)
 					} footer: {
-						LNHeaderFooterView("Sets popup bar titles to longer lorem ipsum strings in standard demo scenes.")
+						LNText("Sets popup bar titles to longer lorem ipsum strings in standard demo scenes.")
 					}
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Popup Interaction Haptic Feedback", isOn: $hapticFeedback, searchString: searchText)
 				} header: {
-					LNHeaderFooterView("Haptic Feedback")
+					LNText("Haptic Feedback")
 				} footer: {
-					LNHeaderFooterView("Enables haptic feedback when the user interacts with the popup.")
+					LNText("Enables haptic feedback when the user interacts with the popup.")
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
@@ -652,9 +640,9 @@ struct SettingsForm : View {
 					.pickerStyle(.menu)
 					.tint(.secondary)
 				} header: {
-					LNHeaderFooterView("Settings")
+					LNText("Settings")
 				} footer: {
-					LNHeaderFooterView("Enables or disables popup image open and close transitions in standard demo scenes.\n\(transitionTypeFooterDescription())")
+					LNText("Enables or disables popup image open and close transitions in standard demo scenes.\n\(transitionTypeFooterDescription())")
 				}
 				
 				if !LNPopupSettingsHasOS26Glass() {
@@ -662,9 +650,9 @@ struct SettingsForm : View {
 						LNToggle("Extend Bar Under Safe Area", isOn: $extendBar, searchString: searchText)
 					} footer: {
 						if isLNPopupUIExample {
-							LNHeaderFooterView("Calls the `popupBarShouldExtendPopupBarUnderSafeArea()` modifier with a value of `true` in standard demo scenes.")
+							LNText("Calls the `popupBarShouldExtendPopupBarUnderSafeArea()` modifier with a value of `true` in standard demo scenes.")
 						} else {
-							LNHeaderFooterView("Sets the `shouldExtendPopupBarUnderSafeArea` property to `true` in standard demo scenes.")
+							LNText("Sets the `shouldExtendPopupBarUnderSafeArea` property to `true` in standard demo scenes.")
 						}
 					}
 				}
@@ -673,7 +661,7 @@ struct SettingsForm : View {
 					SearchAdaptingSection(searchText) { searchText in
 						LNToggle("Limit Width of Floating Bar", isOn: $limitFloatingWidth, searchString: searchText)
 					} footer: {
-						LNHeaderFooterView("Limits the width of a floating popup bar to a system-determined value in standard demo scenes.")
+						LNText("Limits the width of a floating popup bar to a system-determined value in standard demo scenes.")
 					}
 				}
 				
@@ -681,7 +669,7 @@ struct SettingsForm : View {
 					SearchAdaptingSection(searchText) { searchText in
 						LNToggle("Tab \(isLNPopupUIExample ? "Views" : "Bar Controllers") Have Sidebars", isOn: $tabBarHasSidebar, searchString: searchText)
 					} footer: {
-						LNHeaderFooterView("Add support for sidebar to standard tab \(isLNPopupUIExample ? "view" : "bar controller") scenes.")
+						LNText("Add support for sidebar to standard tab \(isLNPopupUIExample ? "view" : "bar controller") scenes.")
 					}
 				}
 				
@@ -689,9 +677,9 @@ struct SettingsForm : View {
 					LNToggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar, searchString: searchText)
 				} footer: {
 					if isLNPopupUIExample == false {
-						LNHeaderFooterView("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
+						LNText("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
 					} else {
-						LNHeaderFooterView("Hides the bottom bar when pushing in a NavigationStack in standard demo scenes.")
+						LNText("Hides the bottom bar when pushing in a NavigationStack in standard demo scenes.")
 					}
 				}
 				
@@ -700,7 +688,7 @@ struct SettingsForm : View {
 						SearchAdaptingSection(searchText) { searchText in
 							LNToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance, searchString: searchText)
 						} footer: {
-							LNHeaderFooterView("Disables the scroll edge appearance for system bars in standard demo scenes.")
+							LNText("Disables the scroll edge appearance for system bars in standard demo scenes.")
 						}
 					}
 				}
@@ -708,27 +696,27 @@ struct SettingsForm : View {
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Context Menu Interactions", isOn: $contextMenu, searchString: searchText)
 				} footer: {
-					LNHeaderFooterView("Enables popup bar context menu interaction in standard demo scenes.")
+					LNText("Enables popup bar context menu interaction in standard demo scenes.")
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Customizations", isOn: $enableCustomizations, searchString: searchText)
 				} footer: {
-					LNHeaderFooterView("Enables popup bar customizations in standard demo scenes.")
+					LNText("Enables popup bar customizations in standard demo scenes.")
 				}
 				
 				if isLNPopupUIExample {
 					SearchAdaptingSection(searchText) { searchText in
 						LNToggle("Custom Labels", isOn: $enableCustomLabels, searchString: searchText)
 					} footer: {
-						LNHeaderFooterView("Enables the use of custom labels in standard demo scenes.")
+						LNText("Enables the use of custom labels in standard demo scenes.")
 					}
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Custom Popup Bar", isOn: $customPopupBar, searchString: searchText)
 				} footer: {
-					LNHeaderFooterView("Enables a custom popup bar in standard demo scenes.")
+					LNText("Enables a custom popup bar in standard demo scenes.")
 				}
 				
 				if !isLNPopupUIExample {
@@ -755,21 +743,21 @@ struct SettingsForm : View {
 					} footer: {
 						switch useScrollingPopupContent {
 						case 10:
-							LNHeaderFooterView("Uses vertical scrolling popup content in standard demo scenes.")
+							LNText("Uses vertical scrolling popup content in standard demo scenes.")
 						case 11:
-							LNHeaderFooterView("Uses horizontal scrolling popup content in standard demo scenes.")
+							LNText("Uses horizontal scrolling popup content in standard demo scenes.")
 							
 						case 20, 21, 22, 23:
-							LNHeaderFooterView("Uses paged scrolling popup content in standard demo scenes.")
+							LNText("Uses paged scrolling popup content in standard demo scenes.")
 							
 						case 100:
-							LNHeaderFooterView("Uses map view popup content in standard demo scenes.")
+							LNText("Uses map view popup content in standard demo scenes.")
 							
 						case 200:
-							LNHeaderFooterView("Uses settings scrolling popup content in standard demo scenes.")
+							LNText("Uses settings scrolling popup content in standard demo scenes.")
 							
 						default:
-							LNHeaderFooterView("Uses standard popup content in standard demo scenes.")
+							LNText("Uses standard popup content in standard demo scenes.")
 						}
 					}
 				}
@@ -778,21 +766,29 @@ struct SettingsForm : View {
 					SearchAdaptingSection(searchText) { searchText in
 						LNToggle("Invert Demo Scene Colors", isOn: $invertDemoSceneColors, searchString: searchText)
 					} footer: {
-						LNHeaderFooterView("Inverts random background colors in standard demo scenes.")
+						LNText("Inverts random background colors in standard demo scenes.")
 					}
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors, searchString: searchText)
 				} footer: {
-					LNHeaderFooterView("Disables random background colors in standard demo scenes.")
+					LNText("Disables random background colors in standard demo scenes.")
 				}
 				
 				if isLNPopupUIExample {
 					SearchAdaptingSection(searchText) { searchText in
 						LNToggle("Use Funky Inherited Font", isOn: $enableFunkyInheritedFont, searchString: searchText)
 					} footer: {
-						LNHeaderFooterView("Enables an environment font that is inherited by the popup bar.")
+						LNText("Enables an environment font that is inherited by the popup bar.")
+					}
+
+					SearchAdaptingSection(searchText, includeHeaderAndFooter: true) { searchText in
+						LNToggle("CompactSlider", isOn: $enableExternalScenes, searchString: searchText)
+					} header: {
+						LNText("External Libraries")
+					} footer: {
+						LNText("Enables scenes for testing with external libraries.")
 					}
 				}
 				
@@ -819,7 +815,7 @@ struct SettingsForm : View {
 										LNText("Default").tag(0.0)
 									}
 								} footer: {
-									LNHeaderFooterView("Uses the default scaling according to screen size and “Display Zoom” setting.")
+									LNText("Uses the default scaling according to screen size and “Display Zoom” setting.")
 								}
 								
 								Section {
@@ -827,7 +823,7 @@ struct SettingsForm : View {
 										LNText("320").tag(320.0)
 									}
 								} footer: {
-									LNHeaderFooterView("Classic phones as well as “Larger Text” non-Max & non-Plus phones.")
+									LNText("Classic phones as well as “Larger Text” non-Max & non-Plus phones.")
 								}
 								
 								Section {
@@ -837,7 +833,7 @@ struct SettingsForm : View {
 										LNText("393").tag(393.0)
 									}
 								} footer: {
-									LNHeaderFooterView("Non-Max & non-Plus phones as well as “Larger Text” Max & Plus phones.")
+									LNText("Non-Max & non-Plus phones as well as “Larger Text” Max & Plus phones.")
 								}
 								
 								Section {
@@ -847,7 +843,7 @@ struct SettingsForm : View {
 										LNText("430").tag(430.0)
 									}
 								} footer: {
-									LNHeaderFooterView("Max & Plus phones.")
+									LNText("Max & Plus phones.")
 								}
 							}.pickerStyle(.inline).navigationTitle(NSLocalizedString("Scaling", comment: ""))
 						} label: {
@@ -859,31 +855,21 @@ struct SettingsForm : View {
 						}
 					}
 				} header: {
-					LNHeaderFooterView("Popup Bar Debug")
+					LNText("Popup Bar Debug")
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Touch Visualizer", isOn: $touchVisualizer, searchString: searchText)
 				} header: {
-					LNHeaderFooterView("Demonstration")
+					LNText("Demonstration")
 				} footer: {
-					LNHeaderFooterView("Enables visualization of touches within the app, for demo purposes.")
-				}
-				
-				if isLNPopupUIExample {
-					SearchAdaptingSection(searchText, includeHeaderAndFooter: true) { searchText in
-						LNToggle("CompactSlider", isOn: $enableExternalScenes, searchString: searchText)
-					} header: {
-						LNHeaderFooterView("External Libraries")
-					} footer: {
-						LNHeaderFooterView("Enables scenes for testing with external libraries.")
-					}
+					LNText("Enables visualization of touches within the app, for demo purposes.")
 				}
 				
 				SearchAdaptingSection(searchText) { _ in
-					
+					EmptyView()
 				} footer: {
-					LNHeaderFooterView("\(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String) Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)")
+					LNText("\(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String) Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)")
 				}
 			}
 			.background {
