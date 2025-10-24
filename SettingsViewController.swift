@@ -937,7 +937,7 @@ struct SettingsView : View {
 				Button {
 					SettingsViewController.reset()
 				} label: {
-					Label("Reset", systemImage: "arrow.counterclockwise")
+					Label(NSLocalizedString("Reset", comment: ""), systemImage: "arrow.counterclockwise")
 						.labelStyle(.toolbar)
 				}
 			}
@@ -949,7 +949,7 @@ struct SettingsView : View {
 						self.presentationMode.wrappedValue.dismiss()
 					}
 				} label: {
-					Label("Done", systemImage: "checkmark")
+					Label(NSLocalizedString("Done", comment: ""), systemImage: "checkmark")
 						.labelStyle(.toolbarDone)
 				}
 			}
