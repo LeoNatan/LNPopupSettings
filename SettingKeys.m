@@ -230,7 +230,6 @@ BOOL LNPopupSettingsHasOS26Glass(void)
 	
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
 		{
 			rv = ![[NSBundle.mainBundle objectForInfoDictionaryKey:@"UIDesignRequiresCompatibility"] boolValue];
@@ -239,9 +238,6 @@ BOOL LNPopupSettingsHasOS26Glass(void)
 		{
 			rv = NO;
 		}
-#else
-		rv = NO;
-#endif
 	});
 	
 	return rv;
