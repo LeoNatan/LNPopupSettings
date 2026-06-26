@@ -29,6 +29,7 @@ PopupSetting const PopupSettingTouchVisualizerEnabled = @"PopupSettingsTouchVisu
 PopupSetting const PopupSettingCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
 PopupSetting const PopupSettingContextMenuEnabled = @"PopupSettingsContextMenuEnabled";
 PopupSetting const PopupSettingLimitFloatingWidth = @"PopupSettingLimitFloatingWidth";
+PopupSetting const PopupSettingMinimizationEnabled = @"PopupSettingMinimizationEnabled";
 PopupSetting const PopupSettingTabBarHasSidebar = @"PopupSettingTabBarHasSidebar";
 
 PopupSetting const PopupSettingBarHideContentView = @"__LNPopupBarHideContentView";
@@ -68,6 +69,7 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 			PopupSettingTabBarHasSidebar: @YES,
 			PopupSettingTransitionType: @0,
 			PopupSettingInvertDemoSceneColors: @YES,
+			PopupSettingMinimizationEnabled: @YES,
 		}];
 	});
 	

@@ -403,6 +403,7 @@ struct SettingsForm : View {
 	
 	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
 	@AppStorage(.extendBar, store: .settings) var extendBar: Bool = true
+	@AppStorage(.minimizationEnabled, store: .settings) var minimizationEnabled: Bool = true
 	@AppStorage(.limitFloatingWidth, store: .settings) var limitFloatingWidth: Bool = true
 	@AppStorage(.hidesBottomBarWhenPushed, store: .settings) var hideBottomBar: Bool = true
 	@AppStorage(.disableScrollEdgeAppearance, store: .settings) var disableScrollEdgeAppearance: Bool = false
@@ -653,6 +654,18 @@ struct SettingsForm : View {
 							LNText("Calls the `popupBarShouldExtendPopupBarUnderSafeArea()` modifier with a value of `true` in standard demo scenes.")
 						} else {
 							LNText("Sets the `shouldExtendPopupBarUnderSafeArea` property to `true` in standard demo scenes.")
+						}
+					}
+				}
+				
+				if LNPopupSettingsHasOS26Glass() {
+					SearchAdaptingSection(searchText) { searchText in
+						LNToggle("Allow Popup Bar Minimization", isOn: $minimizationEnabled, searchString: searchText)
+					} footer: {
+						if isLNPopupUIExample {
+							LNText("Enables popup bar minimization in standard tab view scenes")
+						} else {
+							LNText("Enables popup bar minimization in standard tab bar controller scenes")
 						}
 					}
 				}
