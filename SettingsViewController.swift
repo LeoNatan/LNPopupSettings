@@ -424,7 +424,6 @@ struct SettingsForm : View {
 	@AppStorage(.longerLoremIpsumTitles, store: .settings) var longerLoremIpsumTitles: Bool = false
 	@AppStorage(.disableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
 	@AppStorage(.enableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
-	@AppStorage(.enableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
 	
 	@AppStorage(.enableCustomLabels, store: .settings) var enableCustomLabels: Bool = false
 	@AppStorage(.useScrollingPopupContent, store: .settings) var useScrollingPopupContent: Int = 0
@@ -794,14 +793,6 @@ struct SettingsForm : View {
 						LNToggle("Use Funky Inherited Font", isOn: $enableFunkyInheritedFont, searchString: searchText)
 					} footer: {
 						LNText("Enables an environment font that is inherited by the popup bar.")
-					}
-
-					SearchAdaptingSection(searchText, includeHeaderAndFooter: true) { searchText in
-						LNToggle("CompactSlider", isOn: $enableExternalScenes, searchString: searchText)
-					} header: {
-						LNText("External Libraries")
-					} footer: {
-						LNText("Enables scenes for testing with external libraries.")
 					}
 				}
 				
