@@ -660,12 +660,12 @@ struct SettingsForm : View {
 				
 				if LNPopupSettingsHasOS26Glass() {
 					SearchAdaptingSection(searchText) { searchText in
-						LNToggle("Allow Popup Bar Minimization", isOn: $minimizationEnabled, searchString: searchText)
+						LNToggle("Inherit Bottom Bar Metrics", isOn: $minimizationEnabled, searchString: searchText)
 					} footer: {
 						if isLNPopupUIExample {
-							LNText("Enables popup bar minimization in standard tab view scenes")
+							LNText("Enables inheriting bottom docking bar metrics for the popup bar, including minimization into tab bars.")
 						} else {
-							LNText("Enables popup bar minimization in standard tab bar controller scenes")
+							LNText("Enables inheriting bottom docking view metrics for the popup bar, including minimization into tab bars.")
 						}
 					}
 				}
