@@ -45,7 +45,7 @@ extern PopupSetting const PopupSettingInvertDemoSceneColors;
 extern PopupSetting const PopupSettingDisableDemoSceneColors;
 extern PopupSetting const PopupSettingLongerLoremIpsumTitles;
 extern PopupSetting const PopupSettingEnableFunkyInheritedFont;
-extern PopupSetting const PopupSettingEnableExternalScenes;
+extern PopupSetting const PopupSettingDisableSearchTab;
 
 extern PopupSetting const PopupSettingEnableCustomLabels;
 

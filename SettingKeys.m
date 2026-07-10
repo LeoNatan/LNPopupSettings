@@ -43,7 +43,7 @@ PopupSetting const PopupSettingInvertDemoSceneColors = @"__PopupSettingInvertDem
 PopupSetting const PopupSettingDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
 PopupSetting const PopupSettingLongerLoremIpsumTitles = @"__PopupSettingLongerLoremIpsumTitles";
 PopupSetting const PopupSettingEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
-PopupSetting const PopupSettingEnableExternalScenes = @"DemoAppEnableExternalScenes";
+PopupSetting const PopupSettingDisableSearchTab = @"PopupSettingDisableSearchTab";
 
 PopupSetting const PopupSettingEnableCustomLabels = @"DemoAppEnableCustomLabels";
 

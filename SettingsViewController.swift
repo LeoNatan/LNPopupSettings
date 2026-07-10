@@ -424,6 +424,7 @@ struct SettingsForm : View {
 	@AppStorage(.longerLoremIpsumTitles, store: .settings) var longerLoremIpsumTitles: Bool = false
 	@AppStorage(.disableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
 	@AppStorage(.enableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
+	@AppStorage(.disableSearchTab, store: .settings) var disableSearchTab: Bool = false
 	
 	@AppStorage(.enableCustomLabels, store: .settings) var enableCustomLabels: Bool = false
 	@AppStorage(.useScrollingPopupContent, store: .settings) var useScrollingPopupContent: Int = 0
@@ -788,6 +789,12 @@ struct SettingsForm : View {
 					LNText("Disables random background colors in standard demo scenes.")
 				}
 				
+				SearchAdaptingSection(searchText) { searchText in
+					LNToggle("Disable Search Tabs", isOn: $disableSearchTab, searchString: searchText)
+				} footer: {
+					LNText("Disables search tabs in Music scenes.")
+				}
+				
 				if isLNPopupUIExample {
 					SearchAdaptingSection(searchText) { searchText in
 						LNToggle("Use Funky Inherited Font", isOn: $enableFunkyInheritedFont, searchString: searchText)
@@ -1064,7 +1071,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .enableExternalScenes, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}
