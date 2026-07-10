@@ -425,6 +425,7 @@ struct SettingsForm : View {
 	@AppStorage(.disableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
 	@AppStorage(.enableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
 	@AppStorage(.disableSearchTab, store: .settings) var disableSearchTab: Bool = false
+	@AppStorage(.enableProminentSearchTab, store: .settings) var enableProminentSearchTab: Bool = true
 	
 	@AppStorage(.enableCustomLabels, store: .settings) var enableCustomLabels: Bool = false
 	@AppStorage(.useScrollingPopupContent, store: .settings) var useScrollingPopupContent: Int = 0
@@ -686,6 +687,22 @@ struct SettingsForm : View {
 					}
 				}
 				
+				if LNPopupSettingsHasOS26Glass() {
+					SearchAdaptingSection(searchText) { searchText in
+						LNToggle("Disable Search Tabs", isOn: $disableSearchTab, searchString: searchText)
+					} footer: {
+						LNText("Disables search tabs in Music scenes.")
+					}
+				}
+				
+				if #available(iOS 27.0, *) {
+					SearchAdaptingSection(searchText) { searchText in
+						LNToggle("Prominent Search Tabs", isOn: $enableProminentSearchTab, searchString: searchText)
+					} footer: {
+						LNText("Enables prominent search tabs in standard scenes on iOS 27.0 and above.")
+					}
+				}
+				
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar, searchString: searchText)
 				} footer: {
@@ -696,13 +713,11 @@ struct SettingsForm : View {
 					}
 				}
 				
-				if isLNPopupUIExample == false {
-					if !LNPopupSettingsHasOS26Glass() {
-						SearchAdaptingSection(searchText) { searchText in
-							LNToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance, searchString: searchText)
-						} footer: {
-							LNText("Disables the scroll edge appearance for system bars in standard demo scenes.")
-						}
+				if isLNPopupUIExample == false && !LNPopupSettingsHasOS26Glass() {
+					SearchAdaptingSection(searchText) { searchText in
+						LNToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance, searchString: searchText)
+					} footer: {
+						LNText("Disables the scroll edge appearance for system bars in standard demo scenes.")
 					}
 				}
 				
@@ -787,12 +802,6 @@ struct SettingsForm : View {
 					LNToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors, searchString: searchText)
 				} footer: {
 					LNText("Disables random background colors in standard demo scenes.")
-				}
-				
-				SearchAdaptingSection(searchText) { searchText in
-					LNToggle("Disable Search Tabs", isOn: $disableSearchTab, searchString: searchText)
-				} footer: {
-					LNText("Disables search tabs in Music scenes.")
 				}
 				
 				if isLNPopupUIExample {
@@ -1071,7 +1080,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}

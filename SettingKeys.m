@@ -44,6 +44,7 @@ PopupSetting const PopupSettingDisableDemoSceneColors = @"__LNPopupBarDisableDem
 PopupSetting const PopupSettingLongerLoremIpsumTitles = @"__PopupSettingLongerLoremIpsumTitles";
 PopupSetting const PopupSettingEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
 PopupSetting const PopupSettingDisableSearchTab = @"PopupSettingDisableSearchTab";
+PopupSetting const PopupSettingEnableProminentSearchTab = @"PopupSettingEnableProminentSearchTab";
 
 PopupSetting const PopupSettingEnableCustomLabels = @"DemoAppEnableCustomLabels";
 
@@ -70,6 +71,7 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 			PopupSettingTransitionType: @0,
 			PopupSettingInvertDemoSceneColors: @YES,
 			PopupSettingMinimizationEnabled: @YES,
+			PopupSettingEnableProminentSearchTab: @YES
 		}];
 	});
 	
