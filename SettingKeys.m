@@ -293,6 +293,7 @@ UIButton* LNPopupShinyButton(void)
 	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"View" withString:@"וְיוֻ"];
 	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"[MapKit] Apple Maps Brand Mark" withString:@"מַפס"];
 	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"Exit" withString:@"אֶקְזִיט"];
+	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"Search" withString:@"סֶרְצ׳"];
 	
 	return [stringToTransliterate stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
 }
