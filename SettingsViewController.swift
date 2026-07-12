@@ -8,10 +8,6 @@
 
 import SwiftUI
 
-#if LNPOPUP
-
-import LNPopupController
-
 extension Notification.Name {
 	static let textVisited = Notification.Name("textVisited")
 }
@@ -92,6 +88,10 @@ extension UIBlurEffect.Style {
 	static let `clearGlass` = UIBlurEffect.Style(rawValue: -2)!
 	static let `default` = UIBlurEffect.Style(rawValue: 0xffff)!
 }
+
+#if LNPOPUP
+
+import LNPopupController
 
 fileprivate extension Picker where Label == EmptyView {
 	init(selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) {

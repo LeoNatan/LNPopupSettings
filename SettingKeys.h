@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NSString* PopupSetting _CF_TYPED_EXTENSIBLE_ENUM;
+typedef NSString* PopupSetting NS_TYPED_EXTENSIBLE_ENUM;
 
 extern PopupSetting const PopupSettingBarStyle;
 extern PopupSetting const PopupSettingInteractionStyle;
