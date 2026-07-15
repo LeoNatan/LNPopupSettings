@@ -69,7 +69,7 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 			PopupSettingMarqueeCoordinationEnabled: @YES,
 			PopupSettingTabBarHasSidebar: @YES,
 			PopupSettingTransitionType: @0,
-			PopupSettingInvertDemoSceneColors: @YES,
+			PopupSettingInvertDemoSceneColors: @NO,
 			PopupSettingMinimizationEnabled: @YES,
 			PopupSettingEnableProminentSearchTab: @YES
 		}];
