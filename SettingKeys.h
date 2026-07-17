@@ -32,6 +32,7 @@ extern PopupSetting const PopupSettingCustomBarEverywhereEnabled;
 extern PopupSetting const PopupSettingContextMenuEnabled;
 extern PopupSetting const PopupSettingLimitFloatingWidth;
 extern PopupSetting const PopupSettingMinimizationEnabled;
+extern PopupSetting const PopupSettingAdjustsTabBarLayout;
 extern PopupSetting const PopupSettingTabBarHasSidebar;
 
 extern PopupSetting const PopupSettingBarHideContentView;

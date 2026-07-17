@@ -30,6 +30,7 @@ PopupSetting const PopupSettingCustomBarEverywhereEnabled = @"PopupSettingsCusto
 PopupSetting const PopupSettingContextMenuEnabled = @"PopupSettingsContextMenuEnabled";
 PopupSetting const PopupSettingLimitFloatingWidth = @"PopupSettingLimitFloatingWidth";
 PopupSetting const PopupSettingMinimizationEnabled = @"PopupSettingMinimizationEnabled";
+PopupSetting const PopupSettingAdjustsTabBarLayout = @"PopupSettingAdjustsTabBarLayout";
 PopupSetting const PopupSettingTabBarHasSidebar = @"PopupSettingTabBarHasSidebar";
 
 PopupSetting const PopupSettingBarHideContentView = @"__LNPopupBarHideContentView";
@@ -71,7 +72,8 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 			PopupSettingTransitionType: @0,
 			PopupSettingInvertDemoSceneColors: @NO,
 			PopupSettingMinimizationEnabled: @YES,
-			PopupSettingEnableProminentSearchTab: @YES
+			PopupSettingEnableProminentSearchTab: @YES,
+			PopupSettingAdjustsTabBarLayout: @YES,
 		}];
 	});
 	

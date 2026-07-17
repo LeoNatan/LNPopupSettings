@@ -404,6 +404,7 @@ struct SettingsForm : View {
 	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
 	@AppStorage(.extendBar, store: .settings) var extendBar: Bool = true
 	@AppStorage(.minimizationEnabled, store: .settings) var minimizationEnabled: Bool = true
+	@AppStorage(.adjustsTabBarLayout, store: .settings) var adjustsTabBarLayout: Bool = true
 	@AppStorage(.limitFloatingWidth, store: .settings) var limitFloatingWidth: Bool = true
 	@AppStorage(.hidesBottomBarWhenPushed, store: .settings) var hideBottomBar: Bool = true
 	@AppStorage(.disableScrollEdgeAppearance, store: .settings) var disableScrollEdgeAppearance: Bool = false
@@ -667,6 +668,14 @@ struct SettingsForm : View {
 							LNText("Enables inheriting bottom docking bar metrics for the popup bar, including minimization into tab bars.")
 						} else {
 							LNText("Enables inheriting bottom docking view metrics for the popup bar, including minimization into tab bars.")
+						}
+					}
+					
+					if #available(iOS 27.0, *), !isLNPopupUIExample {
+						SearchAdaptingSection(searchText) { searchText in
+							LNToggle("Tab Bars Adjust Layout", isOn: $adjustsTabBarLayout, searchString: searchText)
+						} footer: {
+							LNText("Enables tab bar layout adjustment when a popup bar is presented.")
 						}
 					}
 				}
@@ -1081,7 +1090,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab, .adjustsTabBarLayout]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}
