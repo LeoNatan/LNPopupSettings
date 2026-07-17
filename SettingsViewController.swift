@@ -735,9 +735,9 @@ struct SettingsForm : View {
 				
 				if isLNPopupUIExample {
 					SearchAdaptingSection(searchText) { searchText in
-						LNToggle("Custom Labels", isOn: $enableCustomLabels, searchString: searchText)
+						LNToggle("SwiftUI Titles", isOn: $enableCustomLabels, searchString: searchText)
 					} footer: {
-						LNText("Enables the use of custom labels in standard demo scenes.")
+						LNText("Enables the use of custom SwiftUI titles in standard demo scenes.")
 					}
 				}
 				
