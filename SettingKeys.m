@@ -7,7 +7,9 @@
 //
 
 #import "SettingKeys.h"
+#if !TARGET_OS_MACCATALYST
 #import <LNTouchVisualizer/LNTouchVisualizer.h>
+#endif
 @import ObjectiveC;
 
 PopupSetting const PopupSettingBarStyle = @"PopupSettingsBarStyle";
