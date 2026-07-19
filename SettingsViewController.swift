@@ -165,13 +165,26 @@ fileprivate struct LNToggle: View {
 		if isHidden {
 			EmptyView()
 		} else {
-			ZStack {
-				Toggle(isOn: isOn, label: {
-					title
-				}).allowsHitTesting(onTapGesture == nil)
-				if let onTapGesture {
-					Color.red.opacity(0.001).onTapGesture(perform: onTapGesture)
+			HStack {
+#if targetEnvironment(macCatalyst)
+				title.fixedSize()
+				Spacer()
+#endif
+				ZStack(alignment: .trailing) {
+					Toggle(isOn: isOn, label: {
+						title
+					})
+					.allowsHitTesting(onTapGesture == nil)
+#if targetEnvironment(macCatalyst)
+					.labelsHidden()
+#endif
+					if let onTapGesture {
+						Color.red.opacity(0.001).onTapGesture(perform: onTapGesture)
+					}
 				}
+#if targetEnvironment(macCatalyst)
+				.offset(x: 15)
+#endif
 			}
 		}
 	}
@@ -416,6 +429,8 @@ struct SettingsForm : View {
 	@AppStorage(.barHideContentView, store: .settings) var hidePopupBarContentView: Bool = false
 	@AppStorage(.barHideShadow, store: .settings) var hidePopupBarShadow: Bool = false
 	@AppStorage(.barEnableLayoutDebug, store: .settings) var layoutDebug: Bool = false
+	@AppStorage(.barEnableTitleLayoutDebug, store: .settings) var titleLayoutDebug: Bool = false
+	@AppStorage(.barEnableButtonLayoutDebug, store: .settings) var buttonLayoutDebug: Bool = false
 	@AppStorage(.enableSlowTransitionsDebug, store: .settings) var enableSlowTransitionsDebug: Bool = false
 	@AppStorage(.forceRTL) var forceRTL: Bool = false
 	@AppStorage(.debugScaling, store: .settings) var debugScaling: Double = 0
@@ -499,62 +514,6 @@ struct SettingsForm : View {
 					LNText("Interaction Style")
 				}
 				
-
-				SearchAdaptingPickerGroup(searchText, selection: $closeButtonStyle) {
-					PickerGroupContent {
-						LNText("Default").tag(LNPopupCloseButton.Style.default)
-					} footer: {
-						LNText("Uses the default popup close button style chosen by the system.")
-					}
-					if #available(iOS 26.0, *) {
-						PickerGroupContent {
-							LNText("Glass").tag(LNPopupCloseButton.Style.glass)
-							LNText("Clear Glass").tag(LNPopupCloseButton.Style.clearGlass)
-							LNText("Prominent Glass").tag(LNPopupCloseButton.Style.prominentGlass)
-							LNText("Prominent Clear Glass").tag(LNPopupCloseButton.Style.prominentClearGlass)
-							LNText("Shiny Glass").tag(LNPopupCloseButton.Style.shinyGlass)
-						} footer: {
-							Text("Glass popup close buttons. Available in iOS 26 and later.")
-						}
-					}
-					PickerGroupContent {
-						LNText("Grabber").tag(LNPopupCloseButton.Style.grabber)
-						LNText("Chevron").tag(LNPopupCloseButton.Style.chevron)
-						LNText("Round").tag(LNPopupCloseButton.Style.round)
-					} footer: {
-						Text("Standard popup close buttons.")
-					}
-					PickerGroupContent {
-						LNText("None").tag(LNPopupCloseButton.Style.none)
-					} footer: {
-						Text("No popup close button.")
-					}
-				} header: {
-					LNText("Close Button Style")
-				}
-				
-				SearchAdaptingSection(searchText) { _ in
-					Picker(selection: $closeButtonPositioning) {
-						LNText("Default").tag(LNPopupCloseButton.Positioning.default)
-						LNText("Leading").tag(LNPopupCloseButton.Positioning.leading)
-						LNText("Center").tag(LNPopupCloseButton.Positioning.center)
-						LNText("Trailing").tag(LNPopupCloseButton.Positioning.trailing)
-					}
-				} header: {
-					LNText("Close Button Positioning")
-				}
-				
-				SearchAdaptingSection(searchText) { _ in
-					Picker(selection: $progressViewStyle) {
-						LNText("Default").tag(LNPopupBar.ProgressViewStyle.default)
-						LNText("Top").tag(LNPopupBar.ProgressViewStyle.top)
-						LNText("Bottom").tag(LNPopupBar.ProgressViewStyle.bottom)
-						LNText("None").tag(LNPopupBar.ProgressViewStyle.none)
-					}
-				} header: {
-					LNText("Progress View Style")
-				}
-				
 				SearchAdaptingPickerGroup(searchText, selection: $blurEffectStyle) {
 					PickerGroupContent {
 						LNText("Default").tag(UIBlurEffect.Style.default)
@@ -593,6 +552,67 @@ struct SettingsForm : View {
 					}
 				} header: {
 					LNText("Background Visual Effect")
+				}
+
+				SearchAdaptingPickerGroup(searchText, selection: $closeButtonStyle) {
+					PickerGroupContent {
+						LNText("Default").tag(LNPopupCloseButton.Style.default)
+					} footer: {
+						LNText("Uses the default popup close button style chosen by the system.")
+					}
+					if #available(iOS 26.0, *) {
+						PickerGroupContent {
+							LNText("Glass").tag(LNPopupCloseButton.Style.glass)
+							LNText("Clear Glass").tag(LNPopupCloseButton.Style.clearGlass)
+							LNText("Prominent Glass").tag(LNPopupCloseButton.Style.prominentGlass)
+							LNText("Prominent Clear Glass").tag(LNPopupCloseButton.Style.prominentClearGlass)
+							LNText("Shiny Glass").tag(LNPopupCloseButton.Style.shinyGlass)
+						} footer: {
+							Text("Glass popup close buttons. Available in iOS 26 and later.")
+						}
+					}
+					PickerGroupContent {
+						LNText("Grabber").tag(LNPopupCloseButton.Style.grabber)
+						LNText("Chevron").tag(LNPopupCloseButton.Style.chevron)
+					} footer: {
+						Text("Standard popup close buttons.")
+					}
+					
+					PickerGroupContent {
+						LNText("None").tag(LNPopupCloseButton.Style.none)
+					} footer: {
+						Text("No popup close button.")
+					}
+					
+					PickerGroupContent {
+						LNText("Round").tag(LNPopupCloseButton.Style.round)
+					} footer: {
+						Text("Deprecated popup close buttons.")
+					}
+				} header: {
+					LNText("Close Button Style")
+				}
+				
+				SearchAdaptingSection(searchText) { _ in
+					Picker(selection: $closeButtonPositioning) {
+						LNText("Default").tag(LNPopupCloseButton.Positioning.default)
+						LNText("Leading").tag(LNPopupCloseButton.Positioning.leading)
+						LNText("Center").tag(LNPopupCloseButton.Positioning.center)
+						LNText("Trailing").tag(LNPopupCloseButton.Positioning.trailing)
+					}
+				} header: {
+					LNText("Close Button Positioning")
+				}
+				
+				SearchAdaptingSection(searchText) { _ in
+					Picker(selection: $progressViewStyle) {
+						LNText("Default").tag(LNPopupBar.ProgressViewStyle.default)
+						LNText("Top").tag(LNPopupBar.ProgressViewStyle.top)
+						LNText("Bottom").tag(LNPopupBar.ProgressViewStyle.bottom)
+						LNText("None").tag(LNPopupBar.ProgressViewStyle.none)
+					}
+				} header: {
+					LNText("Progress View Style")
 				}
 				
 				if LNPopupSettingsHasOS26Glass() {
@@ -823,10 +843,12 @@ struct SettingsForm : View {
 				
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Layout Debug", isOn: $layoutDebug, searchString: searchText)
+					LNToggle("Button Layout Debug", isOn: $buttonLayoutDebug, searchString: searchText)
+					LNToggle("Title Layout Debug", isOn: $titleLayoutDebug, searchString: searchText)
 					LNToggle("Hide Content View", isOn: $hidePopupBarContentView, searchString: searchText)
 					LNToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow, searchString: searchText)
 					LNToggle("Slow Bar & Popup Transitions", isOn: $enableSlowTransitionsDebug, searchString: searchText)
-					LNToggle("Use Right-to-Left Pseudolanguage With Right-to-Left Strings", isOn: $forceRTL, searchString: searchText) {
+					LNToggle("Use Right-to-Left\nPseudolanguage With\nRight-to-Left Strings", isOn: $forceRTL, searchString: searchText) {
 						SettingsViewController.toggleRTL { accepted in
 							guard accepted else {
 								return
@@ -835,7 +857,11 @@ struct SettingsForm : View {
 							forceRTL.toggle()
 						}
 					}
+#if targetEnvironment(macCatalyst)
+					.padding(.vertical, 6)
+#endif
 					
+#if !targetEnvironment(macCatalyst)
 					if isDefault || "Scaling".matches(searchText) {
 						NavigationLink {
 							Form {
@@ -883,10 +909,12 @@ struct SettingsForm : View {
 							}
 						}
 					}
+#endif
 				} header: {
 					LNText("Popup Bar Debug")
 				}
 				
+#if !targetEnvironment(macCatalyst)
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Touch Visualizer", isOn: $touchVisualizer, searchString: searchText)
 				} header: {
@@ -894,6 +922,7 @@ struct SettingsForm : View {
 				} footer: {
 					LNText("Enables visualization of touches within the app, for demo purposes.")
 				}
+#endif
 				
 				SearchAdaptingSection(searchText) { _ in
 					EmptyView()
@@ -901,11 +930,16 @@ struct SettingsForm : View {
 					LNText("\(Bundle.main.infoDictionary!["CFBundleDisplayName"] as! String) Version \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)")
 				}
 			}
+#if targetEnvironment(macCatalyst)
+			.toggleStyle(.switch)
+			.controlSize(.mini)
+#else
 			.background {
 				if isDefault == false {
 					Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
 				}
 			}
+#endif
 		}
 	}
 }
@@ -913,12 +947,17 @@ struct SettingsForm : View {
 extension View {
 	@ViewBuilder
 	func searchable<S: StringProtocol>(text: Binding<String>, prompt: S) -> some View {
+#if targetEnvironment(macCatalyst)
+		searchable(text: text, placement: .navigationBarDrawer(displayMode: .always), prompt: prompt)
+			.searchPresentationToolbarBehavior(.avoidHidingContent)
+#else
 		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
 			searchable(text: text, placement: .toolbar, prompt: prompt)
 				.searchPresentationToolbarBehavior(.avoidHidingContent)
 		} else {
 			searchable(text: text, placement: .navigationBarDrawer(displayMode: .always), prompt: prompt)
 		}
+#endif
 	}
 }
 
@@ -970,6 +1009,9 @@ struct SettingsView : View {
 					Label(NSLocalizedString("Reset", comment: ""), systemImage: "arrow.counterclockwise")
 						.labelStyle(.toolbar)
 				}
+#if targetEnvironment(macCatalyst)
+				.buttonStyle(.plain)
+#endif
 			}
 			ToolbarItem(placement: .confirmationAction) {
 				Button {
@@ -982,8 +1024,14 @@ struct SettingsView : View {
 					Label(NSLocalizedString("Done", comment: ""), systemImage: "checkmark")
 						.labelStyle(.toolbarDone)
 				}
+#if targetEnvironment(macCatalyst)
+				.buttonStyle(.plain)
+#endif
 			}
 		}
+#if targetEnvironment(macCatalyst)
+		.contentMargins(.bottom, 12.0, for: .scrollIndicators)
+#endif
 		.pickerStyle(.inline)
 		.animation(.default, value: marqueeEnabled)
 		.searchable(text: $searchText, prompt: NSLocalizedString("Search", comment: ""))
@@ -994,13 +1042,19 @@ class SettingsViewController: UIHostingController<SettingsView> {
 	required init() {
 		weak var weakSelf: SettingsViewController?
 		
-		super.init(rootView: SettingsView(onDismiss: {
+		super.init(rootView: SettingsView {
 			weakSelf?.presentingViewController?.dismiss(animated: true)
-		}))
+		})
 		
 		weakSelf = self
 		
-		self.preferredContentSize = CGSize(width: 375, height: 600)
+#if targetEnvironment(macCatalyst)
+		let width: CGFloat = 320
+#else
+		let width: CGFloat = 375
+#endif
+		
+		self.preferredContentSize = CGSize(width: width, height: 600)
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -1011,8 +1065,14 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		}))
 		
 		weakSelf = self
+
+#if targetEnvironment(macCatalyst)
+		let width: CGFloat = 320
+#else
+		let width: CGFloat = 375
+#endif
 		
-		self.preferredContentSize = CGSize(width: 375, height: 600)
+		self.preferredContentSize = CGSize(width: width, height: 600)
 	}
 	
 	enum ResetAlertChoice {
@@ -1090,7 +1150,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab, .adjustsTabBarLayout]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .barEnableButtonLayoutDebug, .barEnableTitleLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab, .adjustsTabBarLayout]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}

@@ -38,6 +38,8 @@ extern PopupSetting const PopupSettingTabBarHasSidebar;
 extern PopupSetting const PopupSettingBarHideContentView;
 extern PopupSetting const PopupSettingBarHideShadow;
 extern PopupSetting const PopupSettingBarEnableLayoutDebug;
+extern PopupSetting const PopupSettingBarEnableTitleLayoutDebug;
+extern PopupSetting const PopupSettingBarEnableButtonLayoutDebug;
 extern PopupSetting const PopupSettingEnableSlowTransitionsDebug;
 extern PopupSetting const PopupSettingForceRTL;
 extern PopupSetting const PopupSettingDebugScaling;

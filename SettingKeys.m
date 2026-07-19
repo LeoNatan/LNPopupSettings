@@ -38,6 +38,8 @@ PopupSetting const PopupSettingTabBarHasSidebar = @"PopupSettingTabBarHasSidebar
 PopupSetting const PopupSettingBarHideContentView = @"__LNPopupBarHideContentView";
 PopupSetting const PopupSettingBarHideShadow = @"__LNPopupBarHideShadow";
 PopupSetting const PopupSettingBarEnableLayoutDebug = @"__LNPopupBarEnableLayoutDebug";
+PopupSetting const PopupSettingBarEnableTitleLayoutDebug = @"__PopupSettingBarEnableTitleLayoutDebug";
+PopupSetting const PopupSettingBarEnableButtonLayoutDebug = @"__PopupSettingBarEnableButtonLayoutDebug";
 PopupSetting const PopupSettingEnableSlowTransitionsDebug = @"__LNPopupEnableSlowTransitionsDebug";
 PopupSetting const PopupSettingForceRTL = @"__LNForceRTL";
 PopupSetting const PopupSettingDebugScaling = @"__LNDebugScaling";
@@ -311,7 +313,7 @@ UIButton* LNPopupShinyButton(void)
 {
 	@autoreleasepool
 	{
-		if([NSUserDefaults.standardUserDefaults boolForKey:PopupSettingForceRTL] == NO)
+		if([NSUserDefaults.standardUserDefaults boolForKey:PopupSettingForceRTL] == NO && [NSUserDefaults.standardUserDefaults boolForKey:@"NSForceRightToLeftLocalizedStrings"] == NO)
 		{
 			return;
 		}
