@@ -411,6 +411,9 @@ struct SettingsForm : View {
 	@AppStorage(.marqueeEnabled, store: .settings) var marqueeEnabled: Bool = false
 	@AppStorage(.marqueeCoordinationEnabled, store: .settings) var marqueeCoordinationEnabled: Bool = true
 	@AppStorage(.hapticFeedbackEnabled, store: .settings) var hapticFeedback: Bool = true
+	@AppStorage(.enableIndirectPointerInteraction, store: .settings) var enableIndirectPointerInteraction: Bool = false
+	@AppStorage(.enableOpenOverSplitView, store: .settings) var enableOpenOverSplitView: Bool = LNPopupSettingsIsCatalyst() || UIDevice.current.userInterfaceIdiom == .pad
+	@AppStorage(.enableAvoidPrimaryColumn, store: .settings) var enableAvoidPrimaryColumn: Bool = LNPopupSettingsIsCatalyst() || UIDevice.current.userInterfaceIdiom == .pad
 	@AppStorage(.visualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
 	@AppStorage(.shineEnabled, store: .settings) var shineEnabled: Bool = false
 	
@@ -639,6 +642,23 @@ struct SettingsForm : View {
 						LNToggle("Longer Lorem Ipsum Titles", isOn: $longerLoremIpsumTitles, searchString: searchText)
 					} footer: {
 						LNText("Sets popup bar titles to longer lorem ipsum strings in standard demo scenes.")
+					}
+				}
+				
+				SearchAdaptingSection(searchText) { searchText in
+					LNToggle("Allow indirect pointer interaction", isOn: $enableIndirectPointerInteraction, searchString: searchText)
+				} footer: {
+					LNText("Enables indirect pointer (mouse) interactions.")
+				}
+				
+				if !isLNPopupUIExample {
+					SearchAdaptingSection(searchText) { searchText in
+						LNToggle("Open Over Split View Controller", isOn: $enableOpenOverSplitView, searchString: searchText)
+						LNToggle("Popup Bar Avoids Primary Column", isOn: $enableAvoidPrimaryColumn, searchString: searchText)
+					} header: {
+						LNText("Split View Controllers")
+					} footer: {
+						LNText("Control how the popup bar and popup content display in split view controllers.")
 					}
 				}
 				
@@ -1150,7 +1170,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .barEnableButtonLayoutDebug, .barEnableTitleLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab, .adjustsTabBarLayout]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .barEnableButtonLayoutDebug, .barEnableTitleLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab, .adjustsTabBarLayout, .enableOpenOverSplitView, .enableAvoidPrimaryColumn, .enableIndirectPointerInteraction]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}

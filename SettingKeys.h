@@ -20,21 +20,22 @@ extern PopupSetting const PopupSettingCloseButtonPositioning;
 extern PopupSetting const PopupSettingMarqueeEnabled;
 extern PopupSetting const PopupSettingMarqueeCoordinationEnabled;
 extern PopupSetting const PopupSettingHapticFeedbackEnabled;
-extern PopupSetting const PopupSettingEnableCustomizations;
 extern PopupSetting const PopupSettingTransitionType;
 extern PopupSetting const PopupSettingExtendBar;
-extern PopupSetting const PopupSettingHidesBottomBarWhenPushed;
 extern PopupSetting const PopupSettingDisableScrollEdgeAppearance;
 extern PopupSetting const PopupSettingVisualEffectViewBlurEffect;
 extern PopupSetting const PopupSettingShineEnabled;
-extern PopupSetting const PopupSettingTouchVisualizerEnabled;
-extern PopupSetting const PopupSettingCustomBarEverywhereEnabled;
-extern PopupSetting const PopupSettingContextMenuEnabled;
 extern PopupSetting const PopupSettingLimitFloatingWidth;
 extern PopupSetting const PopupSettingMinimizationEnabled;
 extern PopupSetting const PopupSettingAdjustsTabBarLayout;
-extern PopupSetting const PopupSettingTabBarHasSidebar;
+extern PopupSetting const PopupSettingEnableIndirectPointerInteraction;
+extern PopupSetting const PopupSettingEnableOpenOverSplitView;
+extern PopupSetting const PopupSettingEnableAvoidPrimaryColumn;
 
+extern PopupSetting const PopupSettingEnableCustomizations;
+extern PopupSetting const PopupSettingHidesBottomBarWhenPushed;
+extern PopupSetting const PopupSettingCustomBarEverywhereEnabled;
+extern PopupSetting const PopupSettingContextMenuEnabled;
 extern PopupSetting const PopupSettingBarHideContentView;
 extern PopupSetting const PopupSettingBarHideShadow;
 extern PopupSetting const PopupSettingBarEnableLayoutDebug;
@@ -44,16 +45,18 @@ extern PopupSetting const PopupSettingEnableSlowTransitionsDebug;
 extern PopupSetting const PopupSettingForceRTL;
 extern PopupSetting const PopupSettingDebugScaling;
 
+extern PopupSetting const PopupSettingTabBarHasSidebar;
 extern PopupSetting const PopupSettingInvertDemoSceneColors;
 extern PopupSetting const PopupSettingDisableDemoSceneColors;
 extern PopupSetting const PopupSettingLongerLoremIpsumTitles;
 extern PopupSetting const PopupSettingEnableFunkyInheritedFont;
 extern PopupSetting const PopupSettingDisableSearchTab;
 extern PopupSetting const PopupSettingEnableProminentSearchTab;
-
+extern PopupSetting const PopupSettingUseScrollingPopupContent;
 extern PopupSetting const PopupSettingEnableCustomLabels;
 
-extern PopupSetting const PopupSettingUseScrollingPopupContent;
+extern PopupSetting const PopupSettingTouchVisualizerEnabled;
+
 
 @interface NSUserDefaults (LNPopupSettings)
 
@@ -68,6 +71,7 @@ extern PopupSetting const PopupSettingUseScrollingPopupContent;
 @end
 
 extern BOOL LNPopupSettingsHasOS26Glass(void);
+extern BOOL LNPopupSettingsIsCatalyst(void);
 
 extern UIButton* LNPopupShinyButton(void) API_AVAILABLE(ios(26.0));
 

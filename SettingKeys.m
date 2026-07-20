@@ -33,6 +33,10 @@ PopupSetting const PopupSettingContextMenuEnabled = @"PopupSettingsContextMenuEn
 PopupSetting const PopupSettingLimitFloatingWidth = @"PopupSettingLimitFloatingWidth";
 PopupSetting const PopupSettingMinimizationEnabled = @"PopupSettingMinimizationEnabled";
 PopupSetting const PopupSettingAdjustsTabBarLayout = @"PopupSettingAdjustsTabBarLayout";
+PopupSetting const PopupSettingEnableIndirectPointerInteraction = @"PopupSettingEnableIndirectPointerInteraction";
+PopupSetting const PopupSettingEnableOpenOverSplitView = @"PopupSettingEnableOpenOverSplitView";
+PopupSetting const PopupSettingEnableAvoidPrimaryColumn = @"PopupSettingEnableAvoidPrimaryColumn";
+
 PopupSetting const PopupSettingTabBarHasSidebar = @"PopupSettingTabBarHasSidebar";
 
 PopupSetting const PopupSettingBarHideContentView = @"__LNPopupBarHideContentView";
@@ -80,6 +84,14 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 			PopupSettingAdjustsTabBarLayout: @YES,
 		}];
 	});
+	
+	if(LNPopupSettingsIsCatalyst() || UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	{
+		[rv registerDefaults:@{
+			PopupSettingEnableOpenOverSplitView: @YES,
+			PopupSettingEnableAvoidPrimaryColumn: @YES,
+		}];
+	}
 	
 	return rv;
 }
@@ -259,6 +271,25 @@ BOOL LNPopupSettingsHasOS26Glass(void)
 	});
 	
 	return rv;
+}
+
+BOOL LNPopupSettingsIsCatalyst(void)
+{
+#if TARGET_OS_MACCATALYST
+	return YES;
+#else
+	static BOOL isCatalystApp;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		isCatalystApp = NSProcessInfo.processInfo.isMacCatalystApp;
+		if(@available(iOS 14.0, *))
+		{
+			isCatalystApp = isCatalystApp || NSProcessInfo.processInfo.iOSAppOnMac;
+		}
+	});
+	
+	return isCatalystApp;
+#endif
 }
 
 UIButton* LNPopupShinyButton(void)
