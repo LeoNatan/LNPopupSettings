@@ -7,9 +7,7 @@
 //
 
 #import "SettingKeys.h"
-#if !TARGET_OS_MACCATALYST
 #import <LNTouchVisualizer/LNTouchVisualizer.h>
-#endif
 @import ObjectiveC;
 
 PopupSetting const PopupSettingBarStyle = @"PopupSettingsBarStyle";
@@ -145,6 +143,8 @@ void fixUIKitSwiftUIShit(void)
 	}
 }
 
+#endif
+
 @interface LNTouchVisualizerSupport: NSObject @end
 @implementation LNTouchVisualizerSupport
 
@@ -182,7 +182,7 @@ void fixUIKitSwiftUIShit(void)
 }
 
 + (void)_updateScalingAnimated:(BOOL)animated
-{	
+{
 	for(UIWindowScene* windowScene in UIApplication.sharedApplication.connectedScenes)
 	{
 		if([windowScene isKindOfClass:UIWindowScene.class] == NO)
@@ -195,7 +195,7 @@ void fixUIKitSwiftUIShit(void)
 		{
 			desiredWidth = windowScene.screen.fixedCoordinateSpace.bounds.size.width;
 		}
-		   
+		
 		CGFloat scale = windowScene.screen.fixedCoordinateSpace.bounds.size.width / desiredWidth;
 		
 		for(UIWindow* window in windowScene.windows)
@@ -233,8 +233,6 @@ void fixUIKitSwiftUIShit(void)
 }
 
 @end
-
-#endif
 
 @implementation NSNotificationCenter (LNPopupSettings)
 

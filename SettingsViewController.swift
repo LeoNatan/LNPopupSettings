@@ -934,7 +934,6 @@ struct SettingsForm : View {
 					LNText("Popup Bar Debug")
 				}
 				
-#if !targetEnvironment(macCatalyst)
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Touch Visualizer", isOn: $touchVisualizer, searchString: searchText)
 				} header: {
@@ -942,7 +941,6 @@ struct SettingsForm : View {
 				} footer: {
 					LNText("Enables visualization of touches within the app, for demo purposes.")
 				}
-#endif
 				
 				SearchAdaptingSection(searchText) { _ in
 					EmptyView()
@@ -1007,13 +1005,6 @@ struct SettingsView : View {
 	@AppStorage(.forceRTL) var forceRTL: Bool = false
 	@AppStorage(.marqueeEnabled, store: .settings) var marqueeEnabled: Bool = false
 	
-	let onDismiss: (() -> ())?
-	@Environment(\.presentationMode) var presentationMode
-	
-	init(onDismiss: (() -> ())? = nil) {
-		self.onDismiss = onDismiss
-	}
-	
 	@ViewBuilder var body: some View {
 		ZStack {
 			SettingsForm(isDefault: true, searchText: searchText)
@@ -1021,34 +1012,6 @@ struct SettingsView : View {
 		}
 		.navigationTitle(NSLocalizedString("Settings", comment: ""))
 		.navigationBarTitleDisplayMode(.inline)
-		.toolbar {
-			ToolbarItem(placement: .topBarLeading) {
-				Button {
-					SettingsViewController.reset()
-				} label: {
-					Label(NSLocalizedString("Reset", comment: ""), systemImage: "arrow.counterclockwise")
-						.labelStyle(.toolbar)
-				}
-#if targetEnvironment(macCatalyst)
-				.buttonStyle(.plain)
-#endif
-			}
-			ToolbarItem(placement: .confirmationAction) {
-				Button {
-					if let onDismiss {
-						onDismiss()
-					} else {
-						self.presentationMode.wrappedValue.dismiss()
-					}
-				} label: {
-					Label(NSLocalizedString("Done", comment: ""), systemImage: "checkmark")
-						.labelStyle(.toolbarDone)
-				}
-#if targetEnvironment(macCatalyst)
-				.buttonStyle(.plain)
-#endif
-			}
-		}
 #if targetEnvironment(macCatalyst)
 		.contentMargins(.bottom, 12.0, for: .scrollIndicators)
 #endif
@@ -1060,32 +1023,18 @@ struct SettingsView : View {
 
 class SettingsViewController: UIHostingController<SettingsView> {
 	required init() {
-		weak var weakSelf: SettingsViewController?
+		super.init(rootView: SettingsView())
 		
-		super.init(rootView: SettingsView {
-			weakSelf?.presentingViewController?.dismiss(animated: true)
-		})
-		
-		weakSelf = self
-		
-#if targetEnvironment(macCatalyst)
-		let width: CGFloat = 320
-#else
-		let width: CGFloat = 375
-#endif
-		
-		self.preferredContentSize = CGSize(width: width, height: 600)
+		sharedInit()
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
-		weak var weakSelf: SettingsViewController?
-		
-		super.init(coder: aDecoder, rootView: SettingsView(onDismiss: {
-			weakSelf?.presentingViewController?.dismiss(animated: true)
-		}))
-		
-		weakSelf = self
+		super.init(coder: aDecoder, rootView: SettingsView())
 
+		sharedInit()
+	}
+	
+	func sharedInit() {
 #if targetEnvironment(macCatalyst)
 		let width: CGFloat = 320
 #else
@@ -1093,6 +1042,27 @@ class SettingsViewController: UIHostingController<SettingsView> {
 #endif
 		
 		self.preferredContentSize = CGSize(width: width, height: 600)
+		
+		setupButtons()
+	}
+	
+	func setupButtons() {
+		let done = UIBarButtonItem(systemItem: .done)
+		done.primaryAction = UIAction { [weak self] _ in
+			guard let self else {
+				return
+			}
+			
+			self.presentingViewController?.dismiss(animated: true)
+		}
+		
+		let reset = UIBarButtonItem(title: "Reset", image: UIImage(systemName: "arrow.counterclockwise"))
+		reset.primaryAction = UIAction { _ in
+			SettingsViewController.reset()
+		}
+		
+		navigationItem.rightBarButtonItem = done
+		navigationItem.leftBarButtonItem = reset
 	}
 	
 	enum ResetAlertChoice {
