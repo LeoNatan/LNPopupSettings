@@ -965,15 +965,58 @@ struct SettingsForm : View {
 extension View {
 	@ViewBuilder
 	func searchable<S: StringProtocol>(text: Binding<String>, prompt: S) -> some View {
+		modifier(SettingsSearchableModifier(text: text, prompt: prompt))
+	}
+}
+
+struct SettingsSearchableModifier<S: StringProtocol>: ViewModifier {
+	let text: Binding<String>
+	let prompt: S
+	
+	@FocusState var isFocused: Bool
+	
+	func body(content: Content) -> some View {
 #if targetEnvironment(macCatalyst)
-		searchable(text: text, placement: .navigationBarDrawer(displayMode: .always), prompt: prompt)
-			.searchPresentationToolbarBehavior(.avoidHidingContent)
+		content
+			.environment(\.isSearching, isFocused || !text.wrappedValue.isEmpty)
+			.environment(\.dismissSearch, EnvironmentValues._DismissSearchAction(identifier: "settings") {
+				isFocused = false
+			})
+			.safeAreaBar(edge: .top) {
+			HStack(spacing: 6) {
+				Image(systemName: "magnifyingglass")
+					.padding(.leading, 12)
+					.foregroundStyle(.secondary)
+				TextField(text: text) {
+					Text(prompt)
+						.foregroundStyle(Color.secondary)
+				}
+				.focused($isFocused)
+				if !text.wrappedValue.isEmpty {
+					Button {
+						text.wrappedValue = ""
+					} label: {
+						Image(systemName: "xmark.circle.fill")
+							.padding(.trailing, 12)
+					}
+					.buttonStyle(.borderless)
+					.tint(.primary)
+					.transition(.scale(scale: 0.8).combined(with: .opacity).animation(.interactiveSpring))
+				}
+			}
+			.fontWeight(.medium)
+			.frame(height: 36)
+			.glassEffect()
+			.padding(.horizontal, 16)
+			.padding(.vertical, 8)
+			.padding(.bottom, !text.wrappedValue.isEmpty ? 16 : 8)
+		}
 #else
 		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
-			searchable(text: text, placement: .toolbar, prompt: prompt)
+			content.searchable(text: text, placement: .toolbar, prompt: prompt)
 				.searchPresentationToolbarBehavior(.avoidHidingContent)
 		} else {
-			searchable(text: text, placement: .navigationBarDrawer(displayMode: .always), prompt: prompt)
+			content.searchable(text: text, placement: .navigationBarDrawer(displayMode: .always), prompt: prompt)
 		}
 #endif
 	}
@@ -1211,6 +1254,31 @@ struct SettingsNavView: View {
 		}
 	}
 }
+
+#if targetEnvironment(macCatalyst)
+extension EnvironmentValues {
+	struct _DismissSearchAction: Equatable {
+		let identifier: String
+		let callback: () -> Void
+		
+		static func == (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
+			return lhs.identifier == rhs.identifier
+		}
+		
+		static
+		var empty: _DismissSearchAction {
+			_DismissSearchAction(identifier: "empty", callback: {})
+		}
+		
+		func callAsFunction() {
+			callback()
+		}
+	}
+	
+	@Entry var isSearching: Bool = false
+	@Entry var dismissSearch: _DismissSearchAction = .empty
+}
+#endif
 
 #else
 
