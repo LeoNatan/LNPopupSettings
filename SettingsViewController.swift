@@ -1005,6 +1005,13 @@ struct SettingsView : View {
 	@AppStorage(.forceRTL) var forceRTL: Bool = false
 	@AppStorage(.marqueeEnabled, store: .settings) var marqueeEnabled: Bool = false
 	
+	let onDismiss: (() -> ())?
+	@Environment(\.presentationMode) var presentationMode
+	
+	init(onDismiss: (() -> ())? = nil) {
+		self.onDismiss = onDismiss
+	}
+	
 	@ViewBuilder var body: some View {
 		ZStack {
 			SettingsForm(isDefault: true, searchText: searchText)
@@ -1012,6 +1019,36 @@ struct SettingsView : View {
 		}
 		.navigationTitle(NSLocalizedString("Settings", comment: ""))
 		.navigationBarTitleDisplayMode(.inline)
+		.toolbar {
+			if isLNPopupUIExample {
+				ToolbarItem(placement: .topBarLeading) {
+					Button {
+						SettingsViewController.reset()
+					} label: {
+						Label(NSLocalizedString("Reset", comment: ""), systemImage: "arrow.counterclockwise")
+							.labelStyle(.toolbar)
+					}
+#if targetEnvironment(macCatalyst)
+					.buttonStyle(.plain)
+#endif
+				}
+				ToolbarItem(placement: .confirmationAction) {
+					Button {
+						if let onDismiss {
+							onDismiss()
+						} else {
+							self.presentationMode.wrappedValue.dismiss()
+						}
+					} label: {
+						Label(NSLocalizedString("Done", comment: ""), systemImage: "checkmark")
+							.labelStyle(.toolbarDone)
+					}
+#if targetEnvironment(macCatalyst)
+					.buttonStyle(.plain)
+#endif
+				}
+			}
+		}
 #if targetEnvironment(macCatalyst)
 		.contentMargins(.bottom, 12.0, for: .scrollIndicators)
 #endif
