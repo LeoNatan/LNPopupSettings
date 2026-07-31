@@ -646,7 +646,7 @@ struct SettingsForm : View {
 				}
 				
 				SearchAdaptingSection(searchText) { searchText in
-					LNToggle("Allow indirect pointer interaction", isOn: $enableIndirectPointerInteraction, searchString: searchText)
+					LNToggle("Allow Indirect Pointer Interaction", isOn: $enableIndirectPointerInteraction, searchString: searchText)
 				} footer: {
 					LNText("Enables indirect pointer (mouse) interactions.")
 				}
