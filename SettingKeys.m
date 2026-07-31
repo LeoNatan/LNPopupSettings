@@ -80,16 +80,10 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 			PopupSettingMinimizationEnabled: @YES,
 			PopupSettingEnableProminentSearchTab: @YES,
 			PopupSettingAdjustsTabBarLayout: @YES,
-		}];
-	});
-	
-	if(LNPopupSettingsIsCatalyst() || UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
-	{
-		[rv registerDefaults:@{
 			PopupSettingEnableOpenOverSplitView: @YES,
 			PopupSettingEnableAvoidPrimaryColumn: @YES,
 		}];
-	}
+	});
 	
 	return rv;
 }
