@@ -118,8 +118,9 @@ fileprivate struct LNText: View {
 		NotificationCenter.default.post(name: .textVisited, object: content)
 		
 		@AppStorage(PopupSetting.forceRTL) var forceRTL: Bool = false
+		@AppStorage("NSForceRightToLeftLocalizedStrings") var systemForceRTL: Bool = false
 		
-		if forceRTL == false {
+		if forceRTL == false && systemForceRTL == false {
 			text = Text(LocalizedStringKey(content))
 		} else {
 			text = Text(Bundle.main.localizedString(forKey: content, value: nil, table: nil))
@@ -577,6 +578,9 @@ struct SettingsForm : View {
 					PickerGroupContent {
 						LNText("Grabber").tag(LNPopupCloseButton.Style.grabber)
 						LNText("Chevron").tag(LNPopupCloseButton.Style.chevron)
+						if !LNPopupSettingsHasOS26Glass() {
+							LNText("Round").tag(LNPopupCloseButton.Style.round)
+						}
 					} footer: {
 						Text("Standard popup close buttons.")
 					}
@@ -587,10 +591,12 @@ struct SettingsForm : View {
 						Text("No popup close button.")
 					}
 					
-					PickerGroupContent {
-						LNText("Round").tag(LNPopupCloseButton.Style.round)
-					} footer: {
-						Text("Deprecated popup close buttons.")
+					if LNPopupSettingsHasOS26Glass() {
+						PickerGroupContent {
+							LNText("Round").tag(LNPopupCloseButton.Style.round)
+						} footer: {
+							Text("Deprecated popup close buttons.")
+						}
 					}
 				} header: {
 					LNText("Close Button Style")
