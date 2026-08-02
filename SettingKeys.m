@@ -68,6 +68,7 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 		rv = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.LeoNatan.LNPopupSettings"];
 		
 		[rv registerDefaults:@{
+			PopupSettingInteractionStyle: @(0xAAAA),
 			PopupSettingLimitFloatingWidth: @YES,
 			PopupSettingHidesBottomBarWhenPushed: @YES,
 			PopupSettingExtendBar: @YES,

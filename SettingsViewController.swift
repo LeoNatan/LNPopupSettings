@@ -405,7 +405,7 @@ fileprivate struct SearchAdaptingPickerGroup<Header: View, SelectionValue: Hasha
 
 struct SettingsForm : View {
 	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
-	@AppStorage(.interactionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
+	@AppStorage(.interactionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .automatic
 	@AppStorage(.closeButtonStyle, store: .settings) var closeButtonStyle: LNPopupCloseButton.Style = .default
 	@AppStorage(.closeButtonPositioning, store: .settings) var closeButtonPositioning: LNPopupCloseButton.Positioning = .default
 	@AppStorage(.progressViewStyle, store: .settings) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
@@ -508,14 +508,24 @@ struct SettingsForm : View {
 				
 				SearchAdaptingSection(searchText) { _ in
 					Picker(selection: $interactionStyle) {
+						LNText("Automatic").tag(UIViewController.__PopupInteractionStyle.automatic)
+					}
+				} header: {
+					LNText("Interaction Style")
+				} footer: {
+					LNText("Automatic interaction style, managed by the system.")
+				}
+				
+				SearchAdaptingSection(searchText) { _ in
+					Picker(selection: $interactionStyle) {
 						LNText("Default").tag(UIViewController.__PopupInteractionStyle.default)
 						LNText("Snap").tag(UIViewController.__PopupInteractionStyle.snap)
 						LNText("Drag").tag(UIViewController.__PopupInteractionStyle.drag)
 						LNText("Scroll").tag(UIViewController.__PopupInteractionStyle.scroll)
 						LNText("None").tag(UIViewController.__PopupInteractionStyle.none)
 					}
-				} header: {
-					LNText("Interaction Style")
+				} footer: {
+					LNText("Traditional interaction styles.")
 				}
 				
 				SearchAdaptingPickerGroup(searchText, selection: $blurEffectStyle) {
@@ -1015,7 +1025,6 @@ struct SettingsSearchableModifier<S: StringProtocol>: ViewModifier {
 			.glassEffect()
 			.padding(.horizontal, 16)
 			.padding(.vertical, 8)
-			.padding(.bottom, !text.wrappedValue.isEmpty ? 16 : 8)
 		}
 #else
 		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
