@@ -57,6 +57,9 @@ PopupSetting const PopupSettingEnableCustomLabels = @"DemoAppEnableCustomLabels"
 
 PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrollingPopupContent";
 
+PopupSetting const PopupSettingDuoBarButtonItemAxisBehavior = @"PopupSettingDuoBarButtonItemAxisBehavior";
+PopupSetting const PopupSettingDuoVerticalBarBehavior = @"PopupSettingDuoVerticalBarBehavior";
+
 @implementation NSUserDefaults (LNPopupSettings)
 
 + (NSUserDefaults*)settingDefaults

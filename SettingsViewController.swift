@@ -450,6 +450,9 @@ struct SettingsForm : View {
 	@AppStorage(.enableCustomLabels, store: .settings) var enableCustomLabels: Bool = false
 	@AppStorage(.useScrollingPopupContent, store: .settings) var useScrollingPopupContent: Int = 0
 	
+	@AppStorage(.duoVerticalBarBehavior, store: .settings) var duoVerticalBarBehavior: Int = 0
+	@AppStorage(.duoBarButtonItemAxisBehavior, store: .settings) var duoBarButtonItemAxisBehavior: Int = 0
+	
 	@Environment(\.isSearching) private var isSearching
 	@Environment(\.dismissSearch) private var dismissSearch
 	let searchText: String
@@ -877,6 +880,35 @@ struct SettingsForm : View {
 					}
 				}
 				
+#if !targetEnvironment(macCatalyst)
+				if #available(iOS 27.1, *) {
+					SearchAdaptingSection(searchText) { searchText in
+						Group {
+							Picker(selection: $duoVerticalBarBehavior) {
+								LNText("Automatic").tag(UIVerticalBarBehavior.automatic.rawValue)
+								LNText("Disabled").tag(UIVerticalBarBehavior.disabled.rawValue)
+							} label: {
+								LNText("Vertical Bar Behavior")
+							}
+							.pickerStyle(.menu)
+							
+							Picker(selection: $duoBarButtonItemAxisBehavior) {
+								LNText("Automatic").tag(UIBarButtonItem.AxisBehavior.automatic.rawValue)
+								LNText("Horizontal Only").tag(UIBarButtonItem.AxisBehavior.horizontalOnly.rawValue)
+								LNText("Vertical Preferred").tag(UIBarButtonItem.AxisBehavior.verticalPreferred.rawValue)
+							} label: {
+								LNText("Bar Button Item Axis Behavior")
+							}
+							.pickerStyle(.menu)
+						}.tint(.secondary)
+					} header: {
+						LNText("iPhone Duo")
+					} footer: {
+						LNText("Controls settings unique to iPhone Duo in standard demo scenes.")
+					}
+				}
+#endif
+				
 				SearchAdaptingSection(searchText) { searchText in
 					LNToggle("Layout Debug", isOn: $layoutDebug, searchString: searchText)
 					LNToggle("Button Layout Debug", isOn: $buttonLayoutDebug, searchString: searchText)
@@ -1235,7 +1267,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .barEnableButtonLayoutDebug, .barEnableTitleLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab, .adjustsTabBarLayout, .enableOpenOverSplitView, .enableAvoidPrimaryColumn, .enableIndirectPointerInteraction]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .barEnableButtonLayoutDebug, .barEnableTitleLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab, .adjustsTabBarLayout, .enableOpenOverSplitView, .enableAvoidPrimaryColumn, .enableIndirectPointerInteraction, .duoVerticalBarBehavior, .duoBarButtonItemAxisBehavior]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}

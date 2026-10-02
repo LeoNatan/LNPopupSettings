@@ -57,6 +57,9 @@ extern PopupSetting const PopupSettingEnableCustomLabels;
 
 extern PopupSetting const PopupSettingTouchVisualizerEnabled;
 
+extern PopupSetting const PopupSettingDuoBarButtonItemAxisBehavior;
+extern PopupSetting const PopupSettingDuoVerticalBarBehavior;
+
 
 @interface NSUserDefaults (LNPopupSettings)
 
