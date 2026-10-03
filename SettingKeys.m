@@ -59,6 +59,7 @@ PopupSetting const PopupSettingUseScrollingPopupContent = @"PopupSettingUseScrol
 
 PopupSetting const PopupSettingDuoBarButtonItemAxisBehavior = @"PopupSettingDuoBarButtonItemAxisBehavior";
 PopupSetting const PopupSettingDuoVerticalBarBehavior = @"PopupSettingDuoVerticalBarBehavior";
+PopupSetting const PopupSettingDuoEmbedContentInArrangementView = @"PopupSettingDuoEmbedContentInArrangementView";
 
 @implementation NSUserDefaults (LNPopupSettings)
 

@@ -59,6 +59,7 @@ extern PopupSetting const PopupSettingTouchVisualizerEnabled;
 
 extern PopupSetting const PopupSettingDuoBarButtonItemAxisBehavior;
 extern PopupSetting const PopupSettingDuoVerticalBarBehavior;
+extern PopupSetting const PopupSettingDuoEmbedContentInArrangementView;
 
 
 @interface NSUserDefaults (LNPopupSettings)

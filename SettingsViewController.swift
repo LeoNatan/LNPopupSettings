@@ -452,6 +452,7 @@ struct SettingsForm : View {
 	
 	@AppStorage(.duoVerticalBarBehavior, store: .settings) var duoVerticalBarBehavior: Int = 0
 	@AppStorage(.duoBarButtonItemAxisBehavior, store: .settings) var duoBarButtonItemAxisBehavior: Int = 0
+	@AppStorage(.duoEmbedContentInArrangementView, store: .settings) var duoEmbedContentInArrangementView: Bool = false
 	
 	@Environment(\.isSearching) private var isSearching
 	@Environment(\.dismissSearch) private var dismissSearch
@@ -901,6 +902,8 @@ struct SettingsForm : View {
 							}
 							.pickerStyle(.menu)
 						}.tint(.secondary)
+						
+						LNToggle("Embed Popup Content In Arrangement View", isOn: $duoEmbedContentInArrangementView, searchString: searchText)
 					} header: {
 						LNText("iPhone Duo")
 					} footer: {
@@ -1267,7 +1270,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.settings.removeObject(forKey: .debugScaling)
 			
-			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .barEnableButtonLayoutDebug, .barEnableTitleLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab, .adjustsTabBarLayout, .enableOpenOverSplitView, .enableAvoidPrimaryColumn, .enableIndirectPointerInteraction, .duoVerticalBarBehavior, .duoBarButtonItemAxisBehavior]
+			let settingsToRemove: [PopupSetting] = [.barStyle, .interactionStyle, .closeButtonStyle, .closeButtonPositioning, .progressViewStyle, .enableCustomizations, .disableScrollEdgeAppearance, .touchVisualizerEnabled, .customBarEverywhereEnabled, .contextMenuEnabled, .barHideContentView, .barHideShadow, .barEnableLayoutDebug, .barEnableButtonLayoutDebug, .barEnableTitleLayoutDebug, .enableSlowTransitionsDebug, .invertDemoSceneColors, .longerLoremIpsumTitles, .disableDemoSceneColors, .enableFunkyInheritedFont, .marqueeEnabled, .enableCustomLabels, .useScrollingPopupContent, .limitFloatingWidth, .tabBarHasSidebar, .transitionType, .extendBar, .hidesBottomBarWhenPushed, .hapticFeedbackEnabled, .marqueeCoordinationEnabled, .shineEnabled, .minimizationEnabled, .disableSearchTab, .enableProminentSearchTab, .adjustsTabBarLayout, .enableOpenOverSplitView, .enableAvoidPrimaryColumn, .enableIndirectPointerInteraction, .duoVerticalBarBehavior, .duoBarButtonItemAxisBehavior, .duoEmbedContentInArrangementView]
 			for key in settingsToRemove {
 				UserDefaults.settings.removeObject(forKey: key)
 			}
