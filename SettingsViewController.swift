@@ -880,8 +880,9 @@ struct SettingsForm : View {
 						LNText("Enables an environment font that is inherited by the popup bar.")
 					}
 				}
-				
+
 #if !targetEnvironment(macCatalyst)
+#if canImport(UIKit, _version: 9127.0.85)
 				if #available(iOS 27.1, *) {
 					SearchAdaptingSection(searchText) { searchText in
 						Group {
@@ -910,6 +911,7 @@ struct SettingsForm : View {
 						LNText("Controls settings unique to iPhone Duo in standard demo scenes.")
 					}
 				}
+#endif
 #endif
 				
 				SearchAdaptingSection(searchText) { searchText in
