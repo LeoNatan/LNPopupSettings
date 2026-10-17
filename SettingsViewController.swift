@@ -819,21 +819,30 @@ struct SettingsForm : View {
 				if !isLNPopupUIExample {
 					SearchAdaptingSection(searchText) { searchText in
 						Picker(selection: $useScrollingPopupContent) {
-							LNText("None").tag(0)
+							LNText("Default").tag(0)
 							
-							LNText("Vertical").tag(10)
-							LNText("Horizontal").tag(11)
+							LNText("Vertical Scroll").tag(10)
+							LNText("Horizontal Scroll").tag(11)
 							
-							LNText("Paged (V)").tag(20)
-							LNText("Paged (H)").tag(21)
-							LNText("Paged (V + H)").tag(22)
-							LNText("Paged (H + V)").tag(23)
+							LNText("Paged (V) Scroll").tag(20)
+							LNText("Paged (H) Scroll").tag(21)
+							LNText("Paged (V + H) Scroll").tag(22)
+							LNText("Paged (H + V) Scroll").tag(23)
+							
+							Divider()
 							
 							LNText("Map View").tag(100)
 							
+							Divider()
+							
+							LNText("Navigation Controller").tag(-10)
+							LNText("Tab Bar Controller").tag(-11)
+							
+							Divider()
+							
 							LNText("Settings").tag(200)
 						} label: {
-							LNText("Scrolling Popup Content")
+							LNText("Popup Content")
 						}
 						.pickerStyle(.menu)
 						.tint(.secondary)
